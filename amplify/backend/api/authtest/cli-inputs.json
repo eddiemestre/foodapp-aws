@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "serviceConfiguration": {
+    "apiName": "authtest",
+    "serviceName": "AppSync",
+    "defaultAuthType": {
+      "mode": "API_KEY",
+      "expirationTime": 365,
+      "apiKeyExpirationDate": "2023-12-23T21:10:26.912Z",
+      "keyDescription": "apikey"
+    },
+    "conflictResolution": {},
+    "additionalAuthTypes": []
+  }
+}
