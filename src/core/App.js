@@ -3,7 +3,7 @@ import './App.css';
 import { createBlog, updateBlog, createComment, deleteComment} from '../graphql/mutations'
 import { listComments, listBlogs } from '../graphql/queries'
 import { Amplify, API, graphqlOperation } from 'aws-amplify';
-import awsExports from '../aws-exports';
+import awsmobile from '../aws-exports';
 import './App.css';
 import React, { useContext, useEffect } from "react"
 import { Routes, Route } from 'react-router-dom';
@@ -54,7 +54,7 @@ import SignUp from './SignUp';
 // import Settings from '../../pages/Settings';
 // import UpdatePassword from '../../pages/UpdatePassword';
 // import NotFound from '../../pages/NotFound';
-Amplify.configure(awsExports);
+Amplify.configure(awsmobile);
 
 
 function App() {
