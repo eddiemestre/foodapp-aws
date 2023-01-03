@@ -41,10 +41,10 @@ const PasswordUpdate = ({ setUpdatedPassword }) => {
     // use effect for updated fields field
     useEffect(() => {
         if (oldPass || passNew || passNewConfirm) {
-            console.log('changed')
+            // console.log('changed')
             setShowExitPrompt(true)
         } else {
-            console.log("back to normal")
+            // console.log("back to normal")
             setShowExitPrompt(false)
         }
     }, [oldPass, passNew, passNewConfirm])

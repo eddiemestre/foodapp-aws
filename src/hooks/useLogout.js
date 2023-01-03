@@ -13,9 +13,9 @@ const useLogout = () => {
 
         try {
             await Auth.signOut()
-            console.log("signed out user")
+            // console.log("signed out user")
         } catch (error) {
-            console.log("error signing out: ", error)
+            // console.log("error signing out: ", error)
         }
     }
 

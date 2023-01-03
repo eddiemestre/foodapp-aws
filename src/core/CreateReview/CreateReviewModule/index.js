@@ -155,9 +155,9 @@ const CreateReviewModule = ({ setcreateReviewError }) => {
                 const allReviews = [...userReviewsData, responseData];
                 allReviews.sort((a, b) =>  (a.date===null)-(b.date===null) || new Date(b.date) - new Date(a.date) || a.title.localeCompare(b.title))
                 setUserReviewsData(allReviews)
-                console.log("all reviews", allReviews)
+                // console.log("all reviews", allReviews)
             } else {
-                console.log("no userReviewsData")
+                // console.log("no userReviewsData")
             }
 
             // Clean Up Variables

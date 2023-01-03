@@ -102,7 +102,7 @@ const EmailUpdateForm = ({ setUpdatedEmail, setConfirmationCodeAlert }) => {
             setrenderConfirmationCodeForm(true)
   
         } catch (err) {
-            console.log(err)
+            // console.log(err)
             setErrorMessages({name: emailError, message: errors.genericEmailError})
         }
     }
@@ -117,7 +117,7 @@ const EmailUpdateForm = ({ setUpdatedEmail, setConfirmationCodeAlert }) => {
     const confirmAccount = async (event) => {
         //Prevent page reload
         event.preventDefault();
-        console.log("confirm account")
+        // console.log("confirm account")
         const authCode = confirmationCode
 
         try {

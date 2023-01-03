@@ -18,6 +18,7 @@ import { deleteReview } from "../../graphql/mutations.js";
 import { API, graphqlOperation } from "aws-amplify";
 import { formatDate } from "../../shared/utils/FormatDate.js";
 import { useExitPrompt } from "../../hooks/useUnsavedChangesWarning.js";
+import { errors } from "../../shared/utils/errors.js";
 
 const EditReview = () => {
 
@@ -27,6 +28,7 @@ const EditReview = () => {
     const { userReviewsData, setUserReviewsData, currentReview, setCurrentReview } = useContext(DataContext)
     const { isLoading, notFound} = useContext(SingleReviewContext)
     const [showExitPrompt, setShowExitPrompt] = useExitPrompt()
+    const [ errorMessages, setErrorMessages] = useState({})
 
     // state
     const [discardModal, setDiscardModal] = useState(false)     // animates discard modal in and out
@@ -34,6 +36,7 @@ const EditReview = () => {
     const [discardType, setDiscardType] = useState('')
     const [onEdit, setOnEdit] = useState(true)
     const [editReviewError, setEditReviewError] = useState(false)
+    const [deleteReviewError, setDeleteReviewError] = useState(false)
     const delay = ms => new Promise(res => setTimeout(res, ms));
 
     // reset state of showExitPrompt to false when component
@@ -44,14 +47,14 @@ const EditReview = () => {
         }
     }, [])
 
-    // onRest function for the react-spring component
+    // edit review - onRest function for the react-spring component
     const PauseEditReviewErrorAlertAnimation = async () => {
         await delay(5000);
         setEditReviewError(false)
     }
 
-    // react spring component to create an alert that animates in and out
-    // after 5 seconds
+    // edit review - react spring component to create an alert that animates 
+    // in and out after 5 seconds
     const EditReviewErrorAppear = useTransition(editReviewError, {
         from: { opacity: 0, transform: "translateY(-20px)" },
         enter: { opacity: 1, transform: "translateY(0px)" },
@@ -60,6 +63,24 @@ const EditReview = () => {
         delay: 500,
         onRest: () => PauseEditReviewErrorAlertAnimation(),
     });
+
+    // delete review - onRest function for the react-spring component
+    const PauseDeleteReviewErrorAlertAnimation = async () => {
+        await delay(5000);
+        setDeleteReviewError(false)
+    }
+
+    // delete review - react spring component to create an alert that animates 
+    // in and out after 5 seconds
+    const DeleteReviewErrorAppear = useTransition(deleteReviewError, {
+        from: { opacity: 0, transform: "translateY(-20px)" },
+        enter: { opacity: 1, transform: "translateY(0px)" },
+        leave: { opacity: 0, transform: "translateY(-20px)" },
+        reverse: deleteReviewError,
+        delay: 500,
+        onRest: () => PauseDeleteReviewErrorAlertAnimation(),
+    });
+
     const backgroundOverlay = useTransition(discardModal, {
         from: { opacity: 0 },
         enter: {opacity: 0.5},
@@ -91,8 +112,17 @@ const EditReview = () => {
                 // console.log("wipe current review data")
                 setCurrentReview(null)
             }
+            setDiscardModal(false)
+            setInputHasChanged(false)
+            setShowExitPrompt(false)
+            navigate(`/feed`)
+            // navigate(`/user/${params.username}/`)
         } catch (err) {
-            console.log(err);
+            // console.log(err);
+            // set error alert
+            setDiscardModal(false)  // still want to lose the discard modal when alert appears
+            setDeleteReviewError(true)
+            return;
         }
     }
 
@@ -148,12 +178,7 @@ const EditReview = () => {
             // navigate(`/user/${params.username}/${params.id}`)
             navigate(`/feed/${params.id}`)
         } else {
-            setDiscardModal(false)
-            setInputHasChanged(false)
-            setShowExitPrompt(false)
             await DeleteThisReview()
-            // navigate(`/user/${params.username}/`)
-            navigate(`/feed/`)
         }
     }
 
@@ -171,6 +196,13 @@ const EditReview = () => {
                         item ? 
                         <NoticeContainer style={style}>
                             <NoticeText>Issue editing review, please try again.</NoticeText>
+                        </NoticeContainer>
+                        : ''
+                    )}
+                    {DeleteReviewErrorAppear((style, item) =>
+                        item ? 
+                        <NoticeContainer style={style}>
+                            <NoticeText>Issue deleting review, please try again.</NoticeText>
                         </NoticeContainer>
                         : ''
                     )}

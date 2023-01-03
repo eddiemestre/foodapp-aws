@@ -148,7 +148,7 @@ const EditReviewModule = ({ setInputHasChanged, inputHasChanged, setDiscardModal
         event.preventDefault();
 
         if (!inputHasChanged) {
-            console.log("no changes made")
+            // console.log("no changes made")
             navigate(`/feed/${params.id}`)
             return;
         }

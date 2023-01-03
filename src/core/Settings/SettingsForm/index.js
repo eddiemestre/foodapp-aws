@@ -63,10 +63,10 @@ const SettingsForm = () => {
     // made
     useEffect(() => {
         if (orName !== name || orUsername !== username) {
-            console.log("different")
+            // console.log("different")
             setShowExitPrompt(true)
         } else {
-            console.log("back to normal")
+            // console.log("back to normal")
             setShowExitPrompt(false)
         }
     }, [name, username])
@@ -133,7 +133,7 @@ const SettingsForm = () => {
     
             const user = await Auth.currentAuthenticatedUser();
             const response = await Auth.updateUserAttributes(user, data);
-            console.log(response)
+            // console.log(response)
 
             // update auth state
             setAuth(prevState => ({

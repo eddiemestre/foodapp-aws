@@ -34,4 +34,7 @@ export const errors = {
       NotAuthorizedException: "Incorrect username or password, please try again.",
       genericLoginFailedError: "Login failed, please try again.",
 
+      // delete review error
+      DeleteReviewError: "Unable to delete review, please try again.",
+
 }
