@@ -68,9 +68,9 @@ function App() {
             <Routes>
               <Route element={<PublicTemplate />}>
                 <Route path="/" element={<Home />} />
-                <Route exact path="/signup" element={<SignUp />} />
-                <Route exact path="/login" element={<Login />} />
-              </Route>
+                  <Route exact path="/signup" element={<SignUp />} />
+                  <Route exact path="/login" element={<Login />} />
+                </Route>
               <Route element={<PersistLogin />}>
                 <Route element={<RequireAuth />}>
                   <Route element={<InAppTemplate />}>

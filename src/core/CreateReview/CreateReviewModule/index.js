@@ -20,8 +20,9 @@ import { formatDate } from "../../../shared/utils/FormatDate.js";
 import { useTransition } from '@react-spring/web';
 import { useNavigate, useOutletContext } from "react-router-dom";
 import DataContext from "../../../shared/context/DataContext.js";
-import { API, graphqlOperation } from "aws-amplify";
+import { API, Auth, graphqlOperation } from "aws-amplify";
 import { createReview } from "../../../graphql/mutations.js";
+import useAuth from "../../../hooks/useAuth.js";
 
 const CreateReviewModule = ({ setcreateReviewError }) => {
     const navigate = useNavigate();
@@ -30,11 +31,11 @@ const CreateReviewModule = ({ setcreateReviewError }) => {
         setInputHasChanged,
         setShowExitPrompt
     } = useOutletContext();
-    
+    const { auth } = useAuth();
     const { userReviewsData, setUserReviewsData } = useContext(DataContext)
     const [writeReviewModal, setWriteReviewModal] = useState(false);
     const [dateValue, setDateValue] = useState('');
-    const [isPrivate, setIsPrivate] = useState(false);
+    const [isPrivate, setIsPrivate] = useState(0);
     const [startDate, setStartDate] = useState('');
     const [reviewContent, setReviewContent] = useState('');
     const [reviewTitle, setReviewTitle] = useState('');
@@ -122,8 +123,8 @@ const CreateReviewModule = ({ setcreateReviewError }) => {
         // set review object to save
         let reviewToSave = {
             title: reviewTitle,
-            content: reviewContent,
             private: isPrivate,
+            content: reviewContent,
             // user: auth.username
         }
 
@@ -141,7 +142,7 @@ const CreateReviewModule = ({ setcreateReviewError }) => {
         try {
             const response = await API.graphql(graphqlOperation(createReview, {input: reviewToSave} ))
             let responseData = response.data.createReview
-            // console.log("response", response)
+            console.log("response", response)
             
             // grab the id to be returned and used in the URL
             const id = responseData?.id
@@ -167,7 +168,7 @@ const CreateReviewModule = ({ setcreateReviewError }) => {
             navigate(`/feed/${id}`)
             
         } catch (err) {
-            // console.log(err)
+            console.log(err)
             setcreateReviewError(true)
         }
     }
@@ -178,7 +179,7 @@ const CreateReviewModule = ({ setcreateReviewError }) => {
         setInputHasChanged(false)
         toggleReviewOff()
         setDateValue('');
-        setIsPrivate(false);
+        setIsPrivate(0);
         setStartDate(null);
         setReviewContent('');
         setReviewTitle('');

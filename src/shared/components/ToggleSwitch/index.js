@@ -4,7 +4,12 @@ import "./Styles.css";
 const ToggleSwitch = ({ isPrivate, setIsPrivate, setInputHasChanged, label }) => {
 
     const triggerToggle = () => {
-        setIsPrivate(!isPrivate)
+        if (isPrivate === 0) {
+            setIsPrivate(1)
+        } else {
+            setIsPrivate(0)
+        }
+        // setIsPrivate(!isPrivate)
         // // console.log(isPrivate);
         setInputHasChanged(true)
     }

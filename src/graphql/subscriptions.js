@@ -2,9 +2,13 @@
 // this is an auto generated file. This will be overwritten
 
 export const onCreateReview = /* GraphQL */ `
-  subscription OnCreateReview($filter: ModelSubscriptionReviewFilterInput) {
-    onCreateReview(filter: $filter) {
+  subscription OnCreateReview(
+    $filter: ModelSubscriptionReviewFilterInput
+    $owner: String
+  ) {
+    onCreateReview(filter: $filter, owner: $owner) {
       id
+      owner
       title
       date
       content
@@ -15,9 +19,13 @@ export const onCreateReview = /* GraphQL */ `
   }
 `;
 export const onUpdateReview = /* GraphQL */ `
-  subscription OnUpdateReview($filter: ModelSubscriptionReviewFilterInput) {
-    onUpdateReview(filter: $filter) {
+  subscription OnUpdateReview(
+    $filter: ModelSubscriptionReviewFilterInput
+    $owner: String
+  ) {
+    onUpdateReview(filter: $filter, owner: $owner) {
       id
+      owner
       title
       date
       content
@@ -28,49 +36,17 @@ export const onUpdateReview = /* GraphQL */ `
   }
 `;
 export const onDeleteReview = /* GraphQL */ `
-  subscription OnDeleteReview($filter: ModelSubscriptionReviewFilterInput) {
-    onDeleteReview(filter: $filter) {
+  subscription OnDeleteReview(
+    $filter: ModelSubscriptionReviewFilterInput
+    $owner: String
+  ) {
+    onDeleteReview(filter: $filter, owner: $owner) {
       id
+      owner
       title
       date
       content
       private
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateUser = /* GraphQL */ `
-  subscription OnCreateUser($filter: ModelSubscriptionUserFilterInput) {
-    onCreateUser(filter: $filter) {
-      id
-      email
-      username
-      name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateUser = /* GraphQL */ `
-  subscription OnUpdateUser($filter: ModelSubscriptionUserFilterInput) {
-    onUpdateUser(filter: $filter) {
-      id
-      email
-      username
-      name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteUser = /* GraphQL */ `
-  subscription OnDeleteUser($filter: ModelSubscriptionUserFilterInput) {
-    onDeleteUser(filter: $filter) {
-      id
-      email
-      username
-      name
       createdAt
       updatedAt
     }

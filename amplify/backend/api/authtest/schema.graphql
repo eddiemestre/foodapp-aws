@@ -1,21 +1,25 @@
 # This "input" configures a global authorization rule to enable public access to
 # all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
-input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONLY!
+# input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONLY!
 
-type Review @model {
+type Review @model 
+  @auth(
+    rules: [
+      # allow all authenticated users ability to create reviews
+      # allow owners ability to update and delete their reviews
+      { allow: owner },
+
+      # allow all authenticated users to read reviews
+      { allow: private, operations: [read] },
+
+      # allow all guest users (not authenticated) to read reviews
+      { allow: public, operations: [read] }
+  ]
+  ){
   id: ID!
+  owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
   title: String!
   date: AWSDateTime
   content: String
-  private: Boolean
-  # user: User @belongsTo
-}
-
-
-type User @model {
-  id: ID!
-  email: String!
-  username: String!
-  name: String!
-  # reviews: [Review] @hasMany
+  private: Int!
 }

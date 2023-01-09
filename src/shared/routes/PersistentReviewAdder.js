@@ -58,7 +58,7 @@ const ReviewAdderTemplate = () => {
         return () => {
             setShowExitPrompt(false)
         }
-    }, [])
+    }, [setShowExitPrompt])
 
     const toggleReviewOn = () => {
         setFill('#C56679')

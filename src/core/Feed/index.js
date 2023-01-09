@@ -2,7 +2,7 @@ import React, {useEffect, useState, useContext } from "react";
 import {GlobalStyle, GridContainer, NoticeContainer, NoticeText } from './Styles.js';
 import ReviewList from "./ReviewList/index.js";
 import { listReviews } from "../../graphql/queries.js";
-import { Amplify, API, Auth, graphqlOperation } from "aws-amplify";
+import { Amplify, API, graphqlOperation } from "aws-amplify";
 import DataContext from "../../shared/context/DataContext.js";
 import { formatDate } from "../../shared/utils/FormatDate.js";
 // import { useParams } from "react-router-dom";
@@ -31,7 +31,7 @@ const Feed = () => {
             try {
                 const response = await API.graphql(graphqlOperation(listReviews))
                 const data = response.data.listReviews.items
-
+                // console.log("listReviews", data)
                 const updatedState = data.map(review => {
                     
                     return {...review,
@@ -46,6 +46,7 @@ const Feed = () => {
                 setUserReviewsData(updatedState)
                 setIsLoading(false)
             } catch (err) {
+                // console.log("list reviews errors", err)
                 setNotFound(true)
                 setIsLoading(false)
             }
