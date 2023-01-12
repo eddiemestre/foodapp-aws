@@ -9,14 +9,25 @@
       "UnauthRoleName": "amplify-authtest-dev-184936-unauthRole",
       "StackName": "amplify-authtest-dev-184936",
       "StackId": "arn:aws:cloudformation:us-west-2:078673879291:stack/amplify-authtest-dev-184936/9e812530-79c7-11ed-97bc-02e17a88833d",
-      "AmplifyAppId": "d30b8nboe5jb5"
+      "AmplifyAppId": "d30b8nboe5jb5",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-authtest-dev-184936-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
     },
     "categories": {
-      "api": {
-        "authtest": {}
-      },
       "auth": {
         "authtest5453a3d35453a3d3": {}
+      },
+      "storage": {
+        "Users": {},
+        "Uniques": {}
+      },
+      "function": {
+        "reactrestauth": {
+          "deploymentBucketName": "amplify-authtest-dev-184936-deployment",
+          "s3Key": "amplify-builds/reactrestauth-656c4461657878526e69-build.zip"
+        }
+      },
+      "api": {
+        "reactrestauthapi": {}
       }
     }
   }

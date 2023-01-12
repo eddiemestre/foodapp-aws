@@ -1,0 +1,14 @@
+{
+  "resourceName": "Users",
+  "tableName": "Users",
+  "partitionKey": {
+    "fieldName": "cognitoid",
+    "fieldType": "string"
+  },
+  "sortKey": {
+    "fieldName": "username",
+    "fieldType": "string"
+  },
+  "gsi": [],
+  "triggerFunctions": []
+}

@@ -1,37 +1,18 @@
 {
   "api": {
-    "authtest": {
+    "reactrestauthapi": {
       "dependsOn": [
         {
           "attributes": [
-            "UserPoolId"
+            "Name",
+            "Arn"
           ],
-          "category": "auth",
-          "resourceName": "authtest5453a3d35453a3d3"
+          "category": "function",
+          "resourceName": "reactrestauth"
         }
       ],
-      "output": {
-        "authConfig": {
-          "additionalAuthenticationProviders": [
-            {
-              "apiKeyConfig": {
-                "apiKeyExpirationDate": "2024-01-07T21:17:26.911Z",
-                "apiKeyExpirationDays": 365,
-                "description": "test api key"
-              },
-              "authenticationType": "API_KEY"
-            }
-          ],
-          "defaultAuthentication": {
-            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-            "userPoolConfig": {
-              "userPoolId": "authauthtest5453a3d35453a3d3"
-            }
-          }
-        }
-      },
       "providerPlugin": "awscloudformation",
-      "service": "AppSync"
+      "service": "API Gateway"
     }
   },
   "auth": {
@@ -65,6 +46,41 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
+    }
+  },
+  "function": {
+    "reactrestauth": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_reactrestauth_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "reactrestauth"
+        }
+      ]
+    },
+    "AMPLIFY_function_reactrestauth_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "reactrestauth"
+        }
+      ]
+    }
+  },
+  "storage": {
+    "Uniques": {
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
+    },
+    "Users": {
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
     }
   }
 }

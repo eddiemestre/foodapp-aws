@@ -1,0 +1,14 @@
+{
+  "resourceName": "Uniques",
+  "tableName": "Uniques",
+  "partitionKey": {
+    "fieldName": "uniques_pk",
+    "fieldType": "string"
+  },
+  "sortKey": {
+    "fieldName": "type_sk",
+    "fieldType": "string"
+  },
+  "gsi": [],
+  "triggerFunctions": []
+}
