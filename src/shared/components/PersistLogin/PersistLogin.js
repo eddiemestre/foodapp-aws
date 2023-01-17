@@ -1,32 +1,56 @@
 import { Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
 import useAuth from "../../../hooks/useAuth";
-import { Auth } from "aws-amplify";
+import { useNavigate } from "react-router-dom";
+import { Auth, API } from "aws-amplify";
 import { FadeLoader } from "react-spinners";
+import useLogout from "../../../hooks/useLogout";
 
 const PersistLogin = () => {
     const [isLoading, setIsLoading] = useState(true);
     const { auth, setAuth } = useAuth();
     const delay = ms => new Promise(res => setTimeout(res, ms));
+    const logout = useLogout();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const GetUser = async () => {
             try {
+                // get current user credentials
                 await Auth.currentSession()
                 const user = await Auth.currentAuthenticatedUser();
-                // console.log("in persist login user:", user)
 
+                // console.log("persist user", user)
+                // use those user credentials to form a get request
+                const requestInfo = {
+                    response: true,
+                    queryStringParameters: {
+                        uniques_pk: `${user?.attributes?.email}`,
+                        type_sk: 'email'
+                    },
+                }
+        
+                // get user data
+                const data = await API.get('lambdaapitest', '/users', requestInfo)
+
+                // console.log("in persist login user:", data)
+
+                // use user data to set auth state variables
                 setAuth(prevState => {
                     return {
                         ...prevState,
-                        name: user?.attributes?.name,
+                        name: data?.data?.name,
                         email: user?.attributes?.email,
-                        username: user?.attributes.preferred_username
+                        username: data?.data?.username
                     }
                 })
             }
             catch (err) {
-                console.error(err);
+                // if there is an error, logout and navigate
+                // to the login screen
+                console.error("an error occured", err);
+                await logout();
+                navigate(`/login`)
             }
             finally {
                 await delay(1000)
@@ -45,7 +69,7 @@ const PersistLogin = () => {
         // built into this one - the idea being that we have the "is Loading" 
         // moment customized to specific pages and we can call the is Loading 
         // design elements we need depending on the params
-        !auth ? FetchUser() : setIsLoading(false);
+        !auth?.name ? FetchUser() : setIsLoading(false);
  
     }, [])
 

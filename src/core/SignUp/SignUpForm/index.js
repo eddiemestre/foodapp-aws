@@ -97,23 +97,35 @@ const SignUpForm = ( {setConfirmationCodeAlert }) => {
           setUsername('');
           setPassOne('');
           setPassTwo('');
+          setErrorMessages({})
           setShowConfirmationCodeForm(true)
 
       } catch (err) {
-        // console.log("error signing up, error")
 
-        if (err.name === "UsernameExistsException") { // Email must be unique
+        // console.log(err)
+        let errorName;
+
+        // if this is the error, then this came from the 
+        // Pre-Signup Lambda
+        if (err.name === "UserLambdaValidationException") {
+          errorName = err.message.split("error")[1]
+          errorName = errorName.substring(0, errorName.length - 1).trim()
+          // console.log("error", errorName)
+        } else {
+          errorName = err.name
+        }
+
+        if (errorName === "UsernameExistsException") { // Email must be unique
             setErrorMessages({name: "emailTakenError", message: errors.emailTakenError}); 
-        } else if (err.name === "InvalidPasswordException") { // invalid password
+        } else if (errorName === "InvalidPasswordException") { // invalid password
             setErrorMessages({name: "invalidNewPassword", message: errors.invalidNewPassword})
+        } else if (errorName === "UserNameExistsError") {  // from Pre-Signup Lambda
+            setErrorMessages({name: "usernameTaken", message: errors.usernameTaken})
+        } else if (errorName === "EmailExistsError") {  // from Pre-Signup Lambda
+          setErrorMessages({name: "emailTakenError", message: errors.emailTakenError}); 
         } else {  // other error
             setErrorMessages({name: "genericSignUpError", message: errors.genericSignUpError})
         }
-
-        // TO DO:
-          // additional error checking once user table is screated
-          // username taken
-          // etc
       }
     };
 
@@ -137,6 +149,8 @@ const SignUpForm = ( {setConfirmationCodeAlert }) => {
                 setErrorMessages({name: "emailTaken", message: errors.emailTaken})    
             } else if (err.name === "ExpiredCodeException") {   // code expired
                 setErrorMessages({ name: "ExpiredCodeException", message: errors.ExpiredCodeException})    
+            } else if (err.name === "UserLambdaValidationException") {  // lambda Post Confirmation Error
+                setErrorMessages({name: "genericSignUpError", message: errors.genericSignUpError})
             } else {    // generic
                 setErrorMessages({name: "genericCodeFailure", message: errors.genericCodeFailure})
             }
@@ -201,6 +215,13 @@ const SignUpForm = ( {setConfirmationCodeAlert }) => {
       }
     }
 
+    const onChangeUsername = (event) => {
+      setUsername(event.target.value)
+      if (errorMessages) {
+        setErrorMessages({})
+      }
+    }
+
     const onChangeConfirmationCode = (event) => {
       setConfirmationCode(event.target.value);
       if (errorMessages) {
@@ -251,7 +272,7 @@ const SignUpForm = ( {setConfirmationCodeAlert }) => {
             {renderErrorMessage("nameLengthError")}
           </InputContainer>
           <InputContainer>
-            <InputText placeholder="username i.e. &quot;johnsmith89&quot;..." type="text" name="uname" autoComplete="on" onChange={(e) => setUsername(e.target.value)}required />
+            <InputText placeholder="username i.e. &quot;johnsmith89&quot;..." type="text" name="uname" autoComplete="on" onChange={onChangeUsername}required />
             {renderErrorMessage("invalidUsername")}
             {renderErrorMessage("usernameTaken")}
           </InputContainer>
@@ -287,6 +308,7 @@ const SignUpForm = ( {setConfirmationCodeAlert }) => {
                     {renderErrorMessage("ExpiredCodeException")}
                     {renderErrorMessage("genericCodeFailure")}
                     {renderErrorMessage("resendConfirmationError")}
+                    {renderErrorMessage("genericSignUpError")}
                 </InputContainer>
                 <ChoicesContainer>
                     <Save><ChangeButton>Confirm</ChangeButton></Save>

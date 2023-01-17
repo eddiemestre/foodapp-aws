@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { GlobalStyle, GridContainer, NoticeContainer, NoticeText } from "./Styles";
 import SignUpForm from "./SignUpForm";
 import Footer from "../../shared/components/Footer";
@@ -7,6 +7,14 @@ import { useTransition } from "@react-spring/web";
 const SignUp = () => {
     const [confirmationCodeAlert, setConfirmationCodeAlert] = useState(false)
     const delay = ms => new Promise(res => setTimeout(res, ms));
+
+    useEffect(() => {
+        // const tempEmail = localStorage?.email || null
+        // localStorage.clear()
+        // if (tempEmail) {
+        //   localStorage.setItem("email", tempEmail)
+        // }
+      }, [])
 
     const PauseConfirmationAlertAnimation = async () => {
         await delay(5000);

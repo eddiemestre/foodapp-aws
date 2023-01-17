@@ -1,6 +1,6 @@
 {
   "api": {
-    "reactrestauthapi": {
+    "lambdaapitest": {
       "dependsOn": [
         {
           "attributes": [
@@ -8,7 +8,7 @@
             "Arn"
           ],
           "category": "function",
-          "resourceName": "reactrestauth"
+          "resourceName": "lambdatest"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -18,7 +18,26 @@
   "auth": {
     "authtest5453a3d35453a3d3": {
       "customAuth": false,
-      "dependsOn": [],
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "authtest5453a3d35453a3d3PostConfirmation",
+          "triggerProvider": "Cognito"
+        },
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "authtest5453a3d35453a3d3PreSignup",
+          "triggerProvider": "Cognito"
+        }
+      ],
       "frontendAuthConfig": {
         "mfaConfiguration": "OFF",
         "mfaTypes": [
@@ -29,7 +48,7 @@
             "REQUIRES_NUMBERS",
             "REQUIRES_SYMBOLS"
           ],
-          "passwordPolicyMinLength": 8
+          "passwordPolicyMinLength": "8"
         },
         "signupAttributes": [
           "EMAIL",
@@ -49,35 +68,73 @@
     }
   },
   "function": {
-    "reactrestauth": {
+    "authtest5453a3d35453a3d3PostConfirmation": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "authtest5453a3d35453a3d3PreSignup": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "lambdatest": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     }
   },
   "parameters": {
-    "AMPLIFY_function_reactrestauth_deploymentBucketName": {
+    "AMPLIFY_function_authtest5453a3d35453a3d3PostConfirmation_deploymentBucketName": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "reactrestauth"
+          "resourceName": "authtest5453a3d35453a3d3PostConfirmation"
         }
       ]
     },
-    "AMPLIFY_function_reactrestauth_s3Key": {
+    "AMPLIFY_function_authtest5453a3d35453a3d3PostConfirmation_s3Key": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "reactrestauth"
+          "resourceName": "authtest5453a3d35453a3d3PostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_authtest5453a3d35453a3d3PreSignup_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "authtest5453a3d35453a3d3PreSignup"
+        }
+      ]
+    },
+    "AMPLIFY_function_authtest5453a3d35453a3d3PreSignup_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "authtest5453a3d35453a3d3PreSignup"
+        }
+      ]
+    },
+    "AMPLIFY_function_lambdatest_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "lambdatest"
+        }
+      ]
+    },
+    "AMPLIFY_function_lambdatest_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "lambdatest"
         }
       ]
     }
   },
   "storage": {
-    "Uniques": {
-      "providerPlugin": "awscloudformation",
-      "service": "DynamoDB"
-    },
     "Users": {
       "providerPlugin": "awscloudformation",
       "service": "DynamoDB"

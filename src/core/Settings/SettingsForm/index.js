@@ -12,7 +12,7 @@ import {Container,
         ReadOnlyContainer,
         SaveButton } from "./Styles";
 import useAuth from '../../../hooks/useAuth';
-import { Auth } from 'aws-amplify';
+import { Auth, API } from 'aws-amplify';
 import DataContext from '../../../shared/context/DataContext';
 import { errors } from '../../../shared/utils/errors';
 import { useExitPrompt } from '../../../hooks/useUnsavedChangesWarning';
@@ -113,14 +113,14 @@ const SettingsForm = () => {
 
         // create a data object to capture updates to the 
         // name and username. This object will be sent to the backend
-        let data = {}
+        // let data = {}
 
-        if (orName !== name) {
-            data['name'] = name
-        }
-        if (orUsername !== username) {
-            data['preferred_username'] = username
-        }
+        // if (orName !== name) {
+        //     data['name'] = name
+        // }
+        // if (orUsername !== username) {
+        //     data['preferred_username'] = username
+        // }
 
         // updates user attributes
         // sets updated auth state
@@ -130,23 +130,33 @@ const SettingsForm = () => {
             // console.log("send response to graphQL")
             // TODO:
             // check if username is unique
-    
-            const user = await Auth.currentAuthenticatedUser();
-            const response = await Auth.updateUserAttributes(user, data);
-            // console.log(response)
+            const requestInfo = {
+                response: true,
+                body: {
+                    name: name !== orName ? `${name}` : null,
+                    username: username !== orUsername ? `${username}` : null
+                }
+            }
 
+            const response = await API.put('lambdaapitest', '/users', requestInfo)
+    
+            // const user = await Auth.currentAuthenticatedUser();
+            // const response = await Auth.updateUserAttributes(user, data);
+            console.log("update user settings", response)
+
+            console.log("username:", response?.data?.username)
             // update auth state
             setAuth(prevState => ({
                 ...prevState,
-                "username": username,
-                "name": name
+                "username": response?.data?.username || orUsername,
+                "name": response?.data?.name || orName
               }))
 
             // set updated settings alert
             setUpdatedSettings(true)
 
         } catch (err) {
-            // console.log(err)
+            console.log(err)
             // TODO:
             // will eventually check that username is unique. For now
             // throws a generic error if something goes wrong

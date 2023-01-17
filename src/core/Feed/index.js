@@ -24,14 +24,21 @@ const Feed = () => {
 
         async function fetchUser() {
             try {
-                const user = await Auth.currentAuthenticatedUser()
-                console.log("user", user)
+                // const user = await Auth.currentAuthenticatedUser()
+                // console.log("user", user)
 
-                const token = user.signInUserSession.idToken.jwtToken
-                console.log("token", token)
+                // const token = user.signInUserSession.idToken.jwtToken
+                // console.log("token", token)
 
                 // console.log("sub", user.attributes.sub)
                 // console.log("username", user.attributes.preferred_username)
+
+                // if we get a 403 error, it is likely it won't be logged to 
+                // cloudwatch because we don't have permission to access the 
+                // lambda function or API gateway call in the first place. 
+
+                // queryParameters - for Get, Scan, Query requests
+                // body - for delete, put, post requests
 
                 // Put - writing to the actual
                 // user database will be handled in a 
@@ -39,19 +46,17 @@ const Feed = () => {
                 // upon user email verification.
                 // Put - replace a resource
                 // Post - use to create a new item
-                const requestInfo = {
-                    headers: { Authorization: token },
-                    response: true,
-                    body: {
-                        cognitoid: "post-test",
-                        username: "post123",
-                        name: "ms. lucy",
-                        verified: false
-                    }
-                }
+                // const requestInfo = {
+                //     // headers: { Authorization: token },
+                //     response: true,
+                //     body: {
+                //         uniques_pk: "eddie",
+                //         type: "username"
+                //     }
+                // }
 
-                const data = await API.post('reactrestauthapi', '/hello', requestInfo)
-                // const data = await API.put('reactrestauthapi', '/hello', requestInfo)
+                // const data = await API.put('lambdaapitest', '/users', requestInfo)
+                // const data = await API.put('reactrestauthapi', '/users', requestInfo)
 
 
                 // Patch/Update
@@ -67,7 +72,7 @@ const Feed = () => {
                 //     }
                 // }
 
-                // const data = await API.patch('reactrestauthapi', '/hello', requestInfo)
+                // const data = await API.patch('reactrestauthapi', '/users', requestInfo)
 
                 // // Delete
                 // const requestInfo = {
@@ -79,20 +84,20 @@ const Feed = () => {
                 //     }
                 // }
 
-                // const data = await API.del('reactrestauthapi', '/hello', requestInfo)
+                // const data = await API.del('reactrestauthapi', '/users', requestInfo)
 
 
                 // Get, Query, Scan
+                // Scan is not allowed (no queryStringParameters)
                 // const requestInfo = {
-                //     headers: { Authorization: token },
+                //     // headers: { Authorization: token },
                 //     response: true,
                 //     queryStringParameters: {
-                //         cognitoid: user.attributes.sub,
-                //         username: user.attributes.preferred_username
+                //         uniques_pk: "eddie",
                 //     }
                 // }
         
-                // const data = await API.get('reactrestauthapi', '/hello', requestInfo)
+                // const data = await API.get('lambdaapitest', '/users/', requestInfo)
 
 
 
@@ -111,12 +116,12 @@ const Feed = () => {
                 //     }
                 // }
         
-                // const data = await API.get('reactrestauthapi', '/hello', requestInfo)
+                // const data = await API.get('reactrestauthapi', '/users', requestInfo)
 
 
 
 
-                console.log("data", data)
+                // console.log("data", data)
             } catch (err) {
                 console.log(err)
             }

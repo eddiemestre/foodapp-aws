@@ -1,9 +1,9 @@
 {
   "version": 1,
   "paths": {
-    "/hello": {
-      "name": "/hello",
-      "lambdaFunction": "reactrestauth",
+    "/users": {
+      "name": "/users",
+      "lambdaFunction": "lambdatest",
       "permissions": {
         "setting": "protected",
         "auth": [

@@ -11,7 +11,7 @@
     "env": {
       "Type": "String"
     },
-    "reactrestauthapi": {
+    "lambdaapitest": {
       "Type": "String"
     }
   },
@@ -52,7 +52,7 @@
                       },
                       ":",
                       {
-                        "Ref": "reactrestauthapi"
+                        "Ref": "lambdaapitest"
                       },
                       "/",
                       {
@@ -64,7 +64,7 @@
                           }
                         ]
                       },
-                      "/*/hello/*"
+                      "/*/users/*"
                     ]
                   ]
                 },
@@ -82,7 +82,7 @@
                       },
                       ":",
                       {
-                        "Ref": "reactrestauthapi"
+                        "Ref": "lambdaapitest"
                       },
                       "/",
                       {
@@ -94,7 +94,7 @@
                           }
                         ]
                       },
-                      "/*/hello"
+                      "/*/users"
                     ]
                   ]
                 }
@@ -135,7 +135,7 @@
                       },
                       ":",
                       {
-                        "Ref": "reactrestauthapi"
+                        "Ref": "lambdaapitest"
                       },
                       "/",
                       {
@@ -147,7 +147,7 @@
                           }
                         ]
                       },
-                      "/GET/hello/*"
+                      "/GET/users/*"
                     ]
                   ]
                 },
@@ -165,7 +165,7 @@
                       },
                       ":",
                       {
-                        "Ref": "reactrestauthapi"
+                        "Ref": "lambdaapitest"
                       },
                       "/",
                       {
@@ -177,7 +177,7 @@
                           }
                         ]
                       },
-                      "/GET/hello"
+                      "/GET/users"
                     ]
                   ]
                 }

@@ -12,7 +12,7 @@ import { App,
 import useInput from "./PersistInput";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
-import { Auth } from "aws-amplify";
+import { Auth, API } from "aws-amplify";
 import { errors } from "../../../shared/utils/errors";
 
 const LoginForm = () => {
@@ -29,6 +29,14 @@ const LoginForm = () => {
       setErrorMessages({});
     }, [email, password])
 
+    // useEffect(() => {
+    //   const tempEmail = localStorage?.email || null
+    //   localStorage.clear()
+    //   if (tempEmail) {
+    //     localStorage.setItem("email", tempEmail)
+    //   }
+    // }, [])
+
     // login user
     // sents email and password to backend
     // sets  auth
@@ -41,13 +49,28 @@ const LoginForm = () => {
 
         // console.log("in post login")
         try {
+            // get authed user credentials
             const user = await Auth.signIn(email.toLowerCase().trim(), password)
-            // console.log("post login user", user)
+            console.log("post login user", user)
+
+            // get user data
+            const requestInfo = {
+                response: true,
+                queryStringParameters: {
+                    uniques_pk: `${user?.attributes?.email}`,
+                    type_sk: 'email'
+                },
+            }
+    
+            const data = await API.get('lambdaapitest', '/users', requestInfo)
+
+            console.log("in login fetch user data", data)
+
             setAuth(
                 {
-                    name: user?.attributes?.name,
+                    name: data?.data?.name,
                     email: user?.attributes?.email,
-                    username: user?.attributes.preferred_username
+                    username: data?.data?.username
                 }
             )
             setPassword('')
