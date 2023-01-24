@@ -10,7 +10,7 @@ import {Container,
     ChangeButton
 } from "./Styles";
 import { InputContainer } from '../../../shared/components/FormStyles/Styles'
-import { Auth } from 'aws-amplify';
+import { Auth, API } from 'aws-amplify';
 import useAuth from '../../../hooks/useAuth';
 import { errors } from '../../../shared/utils/errors';
 import { useExitPrompt } from '../../../hooks/useUnsavedChangesWarning';
@@ -98,11 +98,15 @@ const EmailUpdateForm = ({ setUpdatedEmail, setConfirmationCodeAlert }) => {
             const result = await Auth.updateUserAttributes(user, {
               email: newEmail.toLowerCase().trim(),
             });
-            // console.log("result update email", result)
+            console.log("result update email", result)
+
+            if (errorMessages) {
+                setErrorMessages({})
+            }
             setrenderConfirmationCodeForm(true)
   
         } catch (err) {
-            // console.log(err)
+            console.log("error submitting new email", err)
             setErrorMessages({name: emailError, message: errors.genericEmailError})
         }
     }
@@ -118,23 +122,48 @@ const EmailUpdateForm = ({ setUpdatedEmail, setConfirmationCodeAlert }) => {
         //Prevent page reload
         event.preventDefault();
         // console.log("confirm account")
-        const authCode = confirmationCode
+        // const authCode = confirmationCode
+
+
 
         try {
-            const result = await Auth.verifyCurrentUserAttributeSubmit('email', authCode);
-            // console.log(result)
+            const user = await Auth.currentAuthenticatedUser();
+            console.log("accessToken: ", user.signInUserSession.accessToken.jwtToken)
+            
+            const requestInfo = {
+                response: true,
+                body: {
+                    accessToken: user.signInUserSession.accessToken.jwtToken,
+                    AttributeName: "Email address",
+                    Code: confirmationCode,
+                    newEmail: newEmail.toLowerCase().trim()
+    
+                }
+            }
+            const response = await API.put('foodappemailupdateapi', '/emailupdate', requestInfo)
+
+            // const result = await Auth.verifyCurrentUserAttributeSubmit('email', authCode);
+            
+            
+            console.log(response)
             setAuth(prevState => ({
                 ...prevState,
-                "email": newEmail,
+                "email": newEmail.toLowerCase().trim(),
               }))
+
+            localStorage.setItem("email", newEmail.toLowerCase().trim())
+
+            // update session and user storage
+            await Auth.currentSession({ bypassCache: true})
+            await Auth.currentAuthenticatedUser({ bypassCache: true});
 
             setUpdatedEmail(true)
             setNewEmail('')
             setConfirmationCode('')
-            navigate(`/settings`)
+            navigate(`/${auth?.username}/settings`)
 
         } catch (err) {
-            // console.log(err)
+            console.log("error confirming and upating email", err.response)
             if (err.name === "CodeMismatchException") { // wrong code 
                 setErrorMessages({name: codeError, message: errors.CodeMismatchException})
             } else if (err.name === "AliasExistsException") {   // user already exists
@@ -194,7 +223,7 @@ const EmailUpdateForm = ({ setUpdatedEmail, setConfirmationCodeAlert }) => {
                 <br />
                 <ChoicesContainer>
                     <Save><ChangeButton>Change Email</ChangeButton></Save>
-                    <Exit onClick={() => navigate(`/settings`)}>Cancel</Exit>
+                    <Exit onClick={() => navigate(`/${auth?.username}/settings`)}>Cancel</Exit>
                 </ChoicesContainer>
             </form>
         </div>

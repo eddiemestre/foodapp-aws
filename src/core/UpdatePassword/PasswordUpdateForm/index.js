@@ -12,6 +12,7 @@ import PasswordValidator from '../../../shared/components/PasswordValidator';
 import { Auth } from 'aws-amplify';
 import { errors } from '../../../shared/utils/errors';
 import { useExitPrompt } from '../../../hooks/useUnsavedChangesWarning';
+import useAuth from '../../../hooks/useAuth';
 
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,24}$/;
 
@@ -26,6 +27,7 @@ const PasswordUpdate = ({ setUpdatedPassword }) => {
     const [hasSym, setHasSym] = useState(false);
     const [isPassSame, setIsPassSame] = useState(false);
     const [showExitPrompt, setShowExitPrompt] = useExitPrompt()
+    const { auth } = useAuth();
 
     const navigate = useNavigate();
     
@@ -82,9 +84,9 @@ const PasswordUpdate = ({ setUpdatedPassword }) => {
 
             // sset update Password alert to true and navigate back to settings
             setUpdatedPassword(true)
-            navigate('/settings')
+            navigate(`/${auth?.username}/settings`)
         } catch (err) {
-            // console.log(err)
+            console.log("error changing password", err.response)
             // if the current password is not valid, notify user that their old
             // password was entered incorrectly
             if (err.name === "NotAuthorizedException") {
@@ -173,7 +175,7 @@ const PasswordUpdate = ({ setUpdatedPassword }) => {
                 <br />
                 <ChoicesContainer>
                     <Save><ChangeButton>Change Password</ChangeButton></Save>
-                    <Exit onClick={() => navigate(`/settings`)}>Cancel</Exit>
+                    <Exit onClick={() => navigate(`/${auth?.username}/settings`)}>Cancel</Exit>
                 </ChoicesContainer>
         </form>
         </Container>

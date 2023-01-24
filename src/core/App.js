@@ -45,6 +45,9 @@ import UpdateEmail from './UpdateEmail';
 import Login from './Login';
 import SignUp from './SignUp';
 
+// for testing
+import BackendTests from '../shared/components/BackendTests';
+
 // import Login from '../../pages/Login/Login';
 // import SignUp from '../../pages/SignUp/SignUp';
 // import Feed from '../../pages/Feed';
@@ -63,6 +66,8 @@ function App() {
   return (
     <AuthProvider>
       <DataProvider>
+        {/* for testing */}
+        <BackendTests/> 
         { width < 600 || width == undefined ?
           <>
             <Routes>
@@ -76,16 +81,16 @@ function App() {
                   <Route element={<InAppTemplate />}>
                       <>
                         <Route element={<ReviewAdderTemplate />}>
-                          <Route path="/feed" element={<Feed />} />
-                          <Route path="/create-review" element={<CreateReview />}/>
+                          <Route path="/:username/feed" element={<Feed />} />
+                          <Route path="/:username/create-review" element={<CreateReview />}/>
                         </Route>
                         <Route element={<PersistReviewLayout />}>
-                          <Route path="/feed/:id" element={<SingleReview />} />
-                          <Route path="/feed/:id/edit" element={<EditReview />} />
+                          <Route path="/:username/feed/:id" element={<SingleReview />} />
+                          <Route path="/:username/feed/:id/edit" element={<EditReview />} />
                         </Route>
-                        <Route path="/settings" element={<Settings />} />
-                        <Route path="/update-password" element={<UpdatePassword />} />
-                        <Route path="/update-email" element={<UpdateEmail />} />
+                        <Route path="/:username/settings" element={<Settings />} />
+                        <Route path="/:username/update-password" element={<UpdatePassword />} />
+                        <Route path="/:username/update-email" element={<UpdateEmail />} />
                       </>
                   </Route>
                 </Route>

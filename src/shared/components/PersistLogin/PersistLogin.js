@@ -19,29 +19,27 @@ const PersistLogin = () => {
                 // get current user credentials
                 await Auth.currentSession()
                 const user = await Auth.currentAuthenticatedUser();
+                const identity = await Auth.currentUserCredentials()
 
-                // console.log("persist user", user)
-                // use those user credentials to form a get request
                 const requestInfo = {
                     response: true,
-                    queryStringParameters: {
-                        uniques_pk: `${user?.attributes?.email}`,
-                        type_sk: 'email'
-                    },
                 }
-        
-                // get user data
-                const data = await API.get('lambdaapitest', '/users', requestInfo)
 
-                // console.log("in persist login user:", data)
+                // get user data
+                const data = await API.get('foodappusermethods', `/users/private/${identity.identityId}`, requestInfo)
+                console.log("in persist login user:", data)
+
+                let userAttributes = data?.data
+                console.log("persist login userAttributes", userAttributes)
 
                 // use user data to set auth state variables
                 setAuth(prevState => {
                     return {
                         ...prevState,
-                        name: data?.data?.name,
-                        email: user?.attributes?.email,
-                        username: data?.data?.username
+                        name: userAttributes?.name,
+                        email: userAttributes?.email,
+                        username: userAttributes?.username,
+                        identityId: identity.identityId
                     }
                 })
             }

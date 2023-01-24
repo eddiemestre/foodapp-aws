@@ -21,7 +21,7 @@ export const DataProvider = ({ children }) => {
             updatedSettings, setUpdatedSettings,
             updatedPassword, setUpdatedPassword,
             updatedEmail, setUpdatedEmail,
-            justSignedUp, setJustSignedUp
+            justSignedUp, setJustSignedUp,
                 // fromReviewFeed, setFromReviewFeed
         }}>
             { children }

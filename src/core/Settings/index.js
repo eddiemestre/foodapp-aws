@@ -93,7 +93,7 @@ const Settings = () => {
             <OuterContainer>
                 <SettingsContainer>
                     <PageTitle>
-                        <MyReviews onClick={(() => navigate(`/settings`))}>Settings</MyReviews>
+                        <MyReviews onClick={(() => navigate(`/${auth?.username}/settings`))}>Settings</MyReviews>
                     </PageTitle>
                     <Container>
                         { !isLoading && <SettingsForm />}

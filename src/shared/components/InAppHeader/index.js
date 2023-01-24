@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth.js";
 import { useTransition } from '@react-spring/web';
 import MenuModal from "../Menu/index.js";
-
 const InAppHeader = () => {
     const navigate = useNavigate();
     const { auth } = useAuth();
@@ -27,13 +26,7 @@ const InAppHeader = () => {
     });
 
     const handleHeaderClick = () => {
-        if (auth) {
-            // navigate(`/user/${auth?.username}/`)
-            navigate(`/feed`)
-        } else {
-            navigate('/')
-        }
-        
+        navigate(`/${auth?.username}/feed`) 
     }
 
     return(

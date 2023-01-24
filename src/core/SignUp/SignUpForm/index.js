@@ -13,7 +13,7 @@ import { App,
   ChangeButton } from '../../../shared/components/FormStyles/Styles'
 import { useNavigate } from "react-router-dom";
 import PasswordValidator from "../../../shared/components/PasswordValidator/index.js";
-import { Auth } from "aws-amplify";
+import { API, Auth } from "aws-amplify";
 import DataContext from "../../../shared/context/DataContext";
 import { errors } from "../../../shared/utils/errors";
 
@@ -44,6 +44,7 @@ const SignUpForm = ( {setConfirmationCodeAlert }) => {
     const [username, setUsername] = useState('');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [userSub, setUserSub] = useState('')
     
   // // TO DO: add accessibility features for screen readers
 
@@ -79,22 +80,36 @@ const SignUpForm = ( {setConfirmationCodeAlert }) => {
 
       try {
         // console.log("send signup info to server")
-        const { user } = await Auth.signUp({
-            username: email.toLowerCase().trim(),
-            password: pass_one,
-            attributes: {
-                preferred_username: username.toLowerCase(),
-                name: name
-            },
-            autoSignIn: {
-                enabled: true,
-            }
-        });
-        // console.log("user after signup", user)
+        const requestInfo = {
+          response: true,
+          body: {
+              name: name,
+              username: username,
+              email: email,
+              password: pass_one
+          }
+      }
+        console.log("sending signup request")
+        const user = await API.post('foodappsignupapi', '/signup', requestInfo)
+        // const { user } = await Auth.signUp({
+        //     username: email.toLowerCase().trim(),
+        //     password: pass_one,
+        //     attributes: {
+        //         preferred_username: username.toLowerCase(),
+        //         name: name
+        //     },
+        //     body: {
+        //       preferred_username: username.toLowerCase(),
+        //       name: name
+        //     },
+        //     autoSignIn: {
+        //         enabled: true,
+        //     }
+        // });
+        console.log("user after signup", user)
+        setUserSub(user.data.UserSub)
 
           // clear input fields, set state back to empty strings
-          setName('');
-          setUsername('');
           setPassOne('');
           setPassTwo('');
           setErrorMessages({})
@@ -102,7 +117,7 @@ const SignUpForm = ( {setConfirmationCodeAlert }) => {
 
       } catch (err) {
 
-        // console.log(err)
+        console.log("error sending signup request", err.response)
         let errorName;
 
         // if this is the error, then this came from the 
@@ -133,16 +148,38 @@ const SignUpForm = ( {setConfirmationCodeAlert }) => {
         //Prevent page reload
         event.preventDefault();
         // console.log("confirm account")
-        const authCode = confirmationCode
 
         // console.log("email", lowerEmail)
         // console.log("authCode", authCode)
+            // const requestInfo = {
+                //     // headers: { Authorization: token },
+                //     response: true,
+                //     body: {
+                //         uniques_pk: "eddie",
+                //         type: "username"
+                //     }
+                // }
+        const  requestInfo = {
+          response: true,
+          body: {
+            confirmationCode: confirmationCode,
+            username: username,
+            email: email,
+            name: name,
+            sub: userSub
+          }
+        }
 
         try {
-            await Auth.confirmSignUp(email.toLowerCase().trim(), authCode);
+            const response = await API.post('foodappsignupconfirmationapi', '/signupconfirm', requestInfo);
+            console.log("confirm signup response:", response)
             setJustSignedUp(true)
+            setName('');
+            setUsername('');
+            localStorage.setItem("email", email)
             navigate(`/login`)
         } catch (err) {
+          console.log("error confirming new account", err.response)
             if (err.name === "CodeMismatchException") { // wrong code 
                 setErrorMessages({name: err.name, message: err.message})
             } else if (err.name === "AliasExistsException") {   // user already exists
@@ -161,6 +198,7 @@ const SignUpForm = ( {setConfirmationCodeAlert }) => {
     // alerts user that confirmation code has been sent
     const ResendConfirmationCode = async () => {
       try {
+          // just need email to make this work so doesn't need to be custom
           const result = await Auth.resendSignUp(email.toLowerCase().trim(), {
             email: email.toLowerCase().trim(),
           });

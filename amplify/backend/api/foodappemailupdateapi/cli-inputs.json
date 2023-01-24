@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "paths": {
+    "/email/{identityid}": {
+      "name": "/email/{identityid}",
+      "lambdaFunction": "FoodAppUpdateEmailConfirmation",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "update"
+        ]
+      }
+    }
+  }
+}

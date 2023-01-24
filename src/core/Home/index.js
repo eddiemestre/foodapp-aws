@@ -38,59 +38,6 @@ const Home = () => {
     //     }
     //   }, [])
 
-    useEffect(() => {
-        console.log("in use effect")
-        const GetData = async () => {
-            console.log("in get data")
-            try {
-                // Get, Query, Scan
-                // const requestInfo = {
-                //     // headers: { Authorization: token },
-                //     response: true,
-                //     // queryStringParameters: {
-                //     //     cognitoid: "test",
-                //     //     username: "test"
-                //     // }
-                // }
-
-                // const data = await API.get('lambdaapitest', '/users', requestInfo)
-
-                // should work? - YES
-                // Queries work for unauthed users
-                // Scans return 404 (no queryStringParameters)
-                // const requestInfo = {
-                //     response: true,
-                //     queryStringParameters: {
-                //         uniques_pk: "eddie"
-                //     }
-                // }
-        
-                // const data = await API.get('lambdaapitest', '/users', requestInfo)
-
-
-                // shouldn't work? - doesn't work, good!
-                // const requestInfo = {
-                //     // headers: { Authorization: token },
-                //     response: true,
-                //     body: {
-                //         cognitoid: "post-test",
-                //         username: "post123",
-                //         name: "ms. lucy",
-                //         verified: false
-                //     }
-                // }
-
-                // const data = await API.post('lambdaapitest', '/users', requestInfo)
-
-                // console.log(data)
-            } catch (err) {
-                console.log(err)
-            }
-        }
-
-        GetData();
-    }, [])
-
 
     return (
         <>

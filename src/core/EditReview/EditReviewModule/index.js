@@ -32,6 +32,7 @@ const EditReviewModule = ({ setInputHasChanged, inputHasChanged, setDiscardModal
     const params = useParams();
     const { userReviewsData, setUserReviewsData, currentReview, setCurrentReview } = useContext(DataContext)
     const navigate = useNavigate();
+    const { auth } = useAuth();
 
     // state
     const [writeReviewModal, setWriteReviewModal] = useState(false);
@@ -149,7 +150,7 @@ const EditReviewModule = ({ setInputHasChanged, inputHasChanged, setDiscardModal
 
         if (!inputHasChanged) {
             // console.log("no changes made")
-            navigate(`/feed/${params.id}`)
+            navigate(`/${auth?.username}/${params.id}`)
             return;
         }
 
@@ -226,7 +227,7 @@ const EditReviewModule = ({ setInputHasChanged, inputHasChanged, setDiscardModal
             CleanUpVariables();
 
             // navigate(`/user/${auth?.username}/${params.id}`
-            navigate(`/feed/${params.id}`)
+            navigate(`/${auth?.username}/${params.id}`)
 
         } catch (err) {
             // console.log(err);

@@ -8,7 +8,7 @@ const ReviewListModule = ({ review }) => {
     const [formattedDate, setformattedDate] = useState(review.date || null)
     const [rerender, setRerender] = useState(false);
     const navigate = useNavigate();
-    // const params = useParams();
+    const params = useParams();
 
 
     useEffect(() => {
@@ -25,7 +25,7 @@ const ReviewListModule = ({ review }) => {
     const handleClick = (event) => {
         // setFromReviewFeed(true)
         // navigate(`/user/${params.username}/${event}`)
-        navigate(`/feed/${event}`)
+        navigate(`/${params.username}/${event}`)
     }
 
     return(

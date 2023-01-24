@@ -33,7 +33,8 @@ const MenuModal = ({ setMenuOpened }) => {
 
     const openSettings = async () => {
         closeMenu();
-        navigate('/settings')
+        navigate(`/${auth?.username}/settings`)
+
     }
 
     return (

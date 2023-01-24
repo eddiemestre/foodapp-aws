@@ -165,7 +165,7 @@ const CreateReviewModule = ({ setcreateReviewError }) => {
             CleanUpVariables();
 
             // use id to navigate to proper review after creation
-            navigate(`/feed/${id}`)
+            navigate(`/${auth?.username}/${id}`)
             
         } catch (err) {
             console.log(err)

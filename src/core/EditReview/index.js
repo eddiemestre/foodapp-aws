@@ -19,6 +19,7 @@ import { API, graphqlOperation } from "aws-amplify";
 import { formatDate } from "../../shared/utils/FormatDate.js";
 import { useExitPrompt } from "../../hooks/useUnsavedChangesWarning.js";
 import { errors } from "../../shared/utils/errors.js";
+import useAuth from "../../hooks/useAuth.js";
 
 const EditReview = () => {
 
@@ -29,6 +30,7 @@ const EditReview = () => {
     const { isLoading, notFound} = useContext(SingleReviewContext)
     const [showExitPrompt, setShowExitPrompt] = useExitPrompt()
     const [ errorMessages, setErrorMessages] = useState({})
+    const { auth } = useAuth();
 
     // state
     const [discardModal, setDiscardModal] = useState(false)     // animates discard modal in and out
@@ -115,7 +117,7 @@ const EditReview = () => {
             setDiscardModal(false)
             setInputHasChanged(false)
             setShowExitPrompt(false)
-            navigate(`/feed`)
+            navigate(`/${auth?.username}/feed`)
             // navigate(`/user/${params.username}/`)
         } catch (err) {
             // console.log(err);
@@ -140,7 +142,7 @@ const EditReview = () => {
         if (inputHasChanged === false) {
             // console.log("review modal true, changing to false. No changes detected")
             // navigate(`/user/${params.username}/${params.id}`)
-            navigate(`/feed/${params.id}/`)
+            navigate(`/${auth?.username}/${params.id}/`)
             
         } else {
             // console.log("Discard Modal false, changing to True")
@@ -176,7 +178,7 @@ const EditReview = () => {
             setInputHasChanged(false)
             setShowExitPrompt(false)
             // navigate(`/user/${params.username}/${params.id}`)
-            navigate(`/feed/${params.id}`)
+            navigate(`/${auth.username}/${params.id}`)
         } else {
             await DeleteThisReview()
         }

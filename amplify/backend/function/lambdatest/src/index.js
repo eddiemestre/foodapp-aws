@@ -233,11 +233,6 @@ const UpdateUserData = async (body, userSub) => {
         return responseObject
     }
 
-    if (body?.email) {
-        console.log("email val present")
-        emailFlow = true
-    }
-
     // if email flow is true, run the email update function
     if (emailFlow) {
         console.log("in email flow")
@@ -276,25 +271,6 @@ const UpdateUserData = async (body, userSub) => {
     }
 
     responseObject.responseBody = JSON.stringify(responseObject.responseBody)
-    return responseObject
-}
-
-
-// Update Email
-const UpdateEmail = async (body, userSub) => {
-    // establish dynamoDB doc client for easier data management
-    const docClient = new AWS.DynamoDB.DocumentClient()
-    
-    // define the responseObject
-    let responseObject = {
-        responseBody: '',
-        statusCode: 0,
-    }
-
-    let currentEmail;
-
-
-
     return responseObject
 }
 

@@ -138,13 +138,13 @@ const SettingsForm = () => {
                 }
             }
 
-            const response = await API.put('lambdaapitest', '/users', requestInfo)
+            const response = await API.put('foodappusermethods', '/users', requestInfo)
     
             // const user = await Auth.currentAuthenticatedUser();
             // const response = await Auth.updateUserAttributes(user, data);
             console.log("update user settings", response)
 
-            console.log("username:", response?.data?.username)
+            console.log("updated:", response?.data)
             // update auth state
             setAuth(prevState => ({
                 ...prevState,
@@ -156,7 +156,7 @@ const SettingsForm = () => {
             setUpdatedSettings(true)
 
         } catch (err) {
-            console.log(err)
+            console.log("error updating user settings", err.response)
             // TODO:
             // will eventually check that username is unique. For now
             // throws a generic error if something goes wrong
@@ -210,12 +210,12 @@ const SettingsForm = () => {
                 {renderErrorMessage("invalidUsername")}
                 {renderErrorMessage("usernameTaken")}
                 <InputTitle>Email</InputTitle>
-                <ReadOnlyContainer onClick={() => navigate(`/update-email/`)}>
+                <ReadOnlyContainer onClick={() => navigate(`/${auth?.username}/update-email/`)}>
                     <ReadOnlyText value={auth.email} type="text" name="email" readOnly />
                     {RightArrow}
                 </ReadOnlyContainer>
                 <InputTitle>Password</InputTitle>
-                <ReadOnlyContainer onClick={() => navigate(`/update-password/`)}>
+                <ReadOnlyContainer onClick={() => navigate(`/${auth?.username}/update-password/`)}>
                     <ReadOnlyText value="change password" type="text" readOnly />
                     {RightArrow}
                 </ReadOnlyContainer>
@@ -224,7 +224,7 @@ const SettingsForm = () => {
                 <br />
                 <ChoicesContainer>
                     <Save><SaveButton>Save</SaveButton></Save>
-                    <Exit onClick={() => navigate(`/feed`)}>Exit</Exit>
+                    <Exit onClick={() => navigate(`/${auth?.username}/feed`)}>Exit</Exit>
                 </ChoicesContainer>
         </form>
         </Container>

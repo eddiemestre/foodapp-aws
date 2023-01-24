@@ -6,7 +6,7 @@ const getLocalValue = (key, initValue) => {
     if (typeof window === 'undefined') return initValue;
 
     // if value already stored
-    const localValue = JSON.parse(localStorage.getItem(key));
+    const localValue = localStorage.getItem(key);
     if (localValue) return localValue;
 
     // return result of function
@@ -21,7 +21,7 @@ const useLocalStorage = (key, initValue) => {
     });
 
     useEffect(() => {
-        localStorage.setItem(key, JSON.stringify(value));
+        localStorage.setItem(key, value);
     }, [key, value])
 
     return [value, setValue]

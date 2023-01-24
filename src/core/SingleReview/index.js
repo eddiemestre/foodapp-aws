@@ -30,7 +30,6 @@ const SingleReviewView = () => {
     const [isAuthedUser, setIsAuthedUser] = useState(false) // for edit & back button
     const [rerender, setRerender] = useState(false);
     const [isLoading2, setIsLoading2] = useState(true)
-    // const params = useParams();
 
     useEffect(() => {
         setRerender(!rerender)  // dummy state
@@ -110,12 +109,12 @@ const SingleReviewView = () => {
 
     const handleEditClick = () => {
         // navigate(`/user/${auth?.username}/${params.id}/edit`)
-        navigate(`/feed/${params.id}/edit`)
+        navigate(`/${auth?.username}/${params.id}/edit`)
     }
 
     const handleBackClick = () => {
         // navigate(`/user/${params.username}/`)
-        navigate(`/feed`)
+        navigate(`/${params.username}/feed`)
     }
 
     return (
@@ -130,7 +129,7 @@ const SingleReviewView = () => {
                             </TitleContainer>
                             <ContentContainer>
                                 {/* <Link to={`/user/${review?.username}`} style={{textDecoration: 'none'}}><Name>{review?.name}</Name></Link> */}
-                                <Link to={`/feed`} style={{textDecoration: 'none'}}><Name>{currentReview?.name}</Name></Link>
+                                <Link to={`/${params.username}/feed`} style={{textDecoration: 'none'}}><Name>{currentReview?.name}</Name></Link>
                                 <Date>{currentReview?.date_formatted}</Date>
                                 <Content>{currentReview?.content}</Content>
                                 <LastEdited>Last edited on {currentReview?.updatedAt_formatted}</LastEdited>

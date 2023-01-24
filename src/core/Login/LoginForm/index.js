@@ -22,20 +22,21 @@ const LoginForm = () => {
     const [errorMessages, setErrorMessages] = useState({});
     const [email, resetEmail, emailAttribs] =  useInput('email', '')
     const [password, setPassword] = useState('');
-    const from = location.state?.from?.pathname || "/feed";
+    let from = location.state?.from?.pathname || null;
 
     // remove errors if user updates the email or password fields
     useEffect(() => {
       setErrorMessages({});
     }, [email, password])
 
-    // useEffect(() => {
-    //   const tempEmail = localStorage?.email || null
-    //   localStorage.clear()
-    //   if (tempEmail) {
-    //     localStorage.setItem("email", tempEmail)
-    //   }
-    // }, [])
+    useEffect(() => {
+      const tempEmail = localStorage.getItem('email') || null
+      localStorage.clear()
+      if (tempEmail) {
+        localStorage.setItem("email", tempEmail)
+      }
+      // console.log("from", from)
+    }, [])
 
     // login user
     // sents email and password to backend
@@ -56,27 +57,36 @@ const LoginForm = () => {
             // get user data
             const requestInfo = {
                 response: true,
-                queryStringParameters: {
-                    uniques_pk: `${user?.attributes?.email}`,
-                    type_sk: 'email'
-                },
             }
-    
-            const data = await API.get('lambdaapitest', '/users', requestInfo)
 
+            const identity = await Auth.currentUserCredentials()
+            const data = await API.get('foodappusermethods', `/users/private/${identity.identityId}`, requestInfo)
+   
             console.log("in login fetch user data", data)
+
+            let userAttributes = data?.data
+            console.log("user attributes", userAttributes)
 
             setAuth(
                 {
-                    name: data?.data?.name,
-                    email: user?.attributes?.email,
-                    username: data?.data?.username
+                    name: userAttributes?.name,
+                    email: userAttributes?.email,
+                    username: userAttributes?.username,
+                    identityId: identity.identityId
+
                 }
             )
             setPassword('')
+            
+            if (!from) {
+              console.log("reassign from")
+              from = `/${userAttributes?.username}/feed`
+              // console.log("from", from)
+            }
             navigate(from, { replace: true})
         } catch (err) {
-          // console.log(err)
+          console.log("error signing in user", err.response)
+          console.log("error signing in user", err)
             if (err.name === "NotAuthorizedException") {
               setErrorMessages({name: "NotAuthorizedException", message: errors.NotAuthorizedException})
             } else {

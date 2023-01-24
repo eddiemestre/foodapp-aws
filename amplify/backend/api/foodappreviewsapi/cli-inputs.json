@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "paths": {
+    "/publicreviews/{username}": {
+      "name": "/publicreviews/{username}",
+      "lambdaFunction": "FoodAppPublicReviews",
+      "permissions": {
+        "setting": "protected",
+        "auth": [
+          "read"
+        ],
+        "guest": [
+          "read"
+        ]
+      }
+    },
+    "/reviews/{identityid}": {
+      "name": "/reviews/{identityid}",
+      "lambdaFunction": "FoodAppReviewMethods",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ]
+      }
+    }
+  }
+}

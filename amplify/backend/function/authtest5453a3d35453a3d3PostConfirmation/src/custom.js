@@ -54,9 +54,9 @@ const AddUserDataToTables = async (user_attributes) => {
         {
           PutRequest: {
             // check not exists for user sub
-            ConditionExpression: "attribute_not_exists(#sub)",
+            ConditionExpression: "attribute_not_exists(#id)",
             ExpressionAttributeNames: {
-              "#sub": `${user_attributes.sub}`
+              "#id": "id"
             },
             // the attributes we're adding to the Table
             Item: {
@@ -74,7 +74,7 @@ const AddUserDataToTables = async (user_attributes) => {
             // check not exists for username
             ConditionExpression: "attribute_not_exists(#u)",
             ExpressionAttributeNames: {
-              "#u": `${user_attributes.preferred_username}`
+              "#u": "uniques_pk"
             },
             // attributes we're adding to the Table
             Item: {
@@ -86,9 +86,9 @@ const AddUserDataToTables = async (user_attributes) => {
         },
         {
           PutRequest: {
-            ConditionExpression: "attribute_not_exists(#e)",
+            ConditionExpression: "attribute_not_exists(#u)",
             ExpressionAttributeNames: {
-              "#e": `${user_attributes.email}`
+              "#u": "uniques_pk"
             },
             Item: {
               uniques_pk: `${user_attributes.email}`,

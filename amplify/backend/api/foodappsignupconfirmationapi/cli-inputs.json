@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "paths": {
+    "/signupconfirm": {
+      "name": "/signupconfirm",
+      "lambdaFunction": "FoodAppSignUpConfirmation",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}

@@ -1,5 +1,91 @@
 {
   "api": {
+    "foodappemailupdateapi": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "FoodAppUpdateEmailConfirmation"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
+    "foodappreviewsapi": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "FoodAppPublicReviews"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "FoodAppReviewMethods"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
+    "foodappsignupapi": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "FoodAppSignUp"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
+    "foodappsignupconfirmationapi": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "FoodAppSignUpConfirmation"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
+    "foodappusermethods": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "FoodAppPublicUserData"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "FoodAppUserMethods"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
     "lambdaapitest": {
       "dependsOn": [
         {
@@ -16,28 +102,9 @@
     }
   },
   "auth": {
-    "authtest5453a3d35453a3d3": {
+    "FoodAppAuth": {
       "customAuth": false,
-      "dependsOn": [
-        {
-          "attributes": [
-            "Arn",
-            "Name"
-          ],
-          "category": "function",
-          "resourceName": "authtest5453a3d35453a3d3PostConfirmation",
-          "triggerProvider": "Cognito"
-        },
-        {
-          "attributes": [
-            "Arn",
-            "Name"
-          ],
-          "category": "function",
-          "resourceName": "authtest5453a3d35453a3d3PreSignup",
-          "triggerProvider": "Cognito"
-        }
-      ],
+      "dependsOn": [],
       "frontendAuthConfig": {
         "mfaConfiguration": "OFF",
         "mfaTypes": [
@@ -48,12 +115,10 @@
             "REQUIRES_NUMBERS",
             "REQUIRES_SYMBOLS"
           ],
-          "passwordPolicyMinLength": "8"
+          "passwordPolicyMinLength": 8
         },
         "signupAttributes": [
-          "EMAIL",
-          "NAME",
-          "PREFERRED_USERNAME"
+          "EMAIL"
         ],
         "socialProviders": [],
         "usernameAttributes": [
@@ -68,6 +133,42 @@
     }
   },
   "function": {
+    "FoodAppPublicReviews": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "FoodAppPublicUserData": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "FoodAppReviewMethods": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "FoodAppSignUp": {
+      "build": true,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "FoodAppSignUpConfirmation": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "FoodAppUpdateEmailConfirmation": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "FoodAppUserMethods": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "authtest5453a3d35453a3d3PostConfirmation": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -85,6 +186,118 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_FoodAppPublicReviews_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "FoodAppPublicReviews"
+        }
+      ]
+    },
+    "AMPLIFY_function_FoodAppPublicReviews_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "FoodAppPublicReviews"
+        }
+      ]
+    },
+    "AMPLIFY_function_FoodAppPublicUserData_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "FoodAppPublicUserData"
+        }
+      ]
+    },
+    "AMPLIFY_function_FoodAppPublicUserData_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "FoodAppPublicUserData"
+        }
+      ]
+    },
+    "AMPLIFY_function_FoodAppReviewMethods_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "FoodAppReviewMethods"
+        }
+      ]
+    },
+    "AMPLIFY_function_FoodAppReviewMethods_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "FoodAppReviewMethods"
+        }
+      ]
+    },
+    "AMPLIFY_function_FoodAppSignUpConfirmation_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "FoodAppSignUpConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_FoodAppSignUpConfirmation_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "FoodAppSignUpConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_FoodAppSignUp_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "FoodAppSignUp"
+        }
+      ]
+    },
+    "AMPLIFY_function_FoodAppSignUp_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "FoodAppSignUp"
+        }
+      ]
+    },
+    "AMPLIFY_function_FoodAppUpdateEmailConfirmation_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "FoodAppUpdateEmailConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_FoodAppUpdateEmailConfirmation_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "FoodAppUpdateEmailConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_FoodAppUserMethods_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "FoodAppUserMethods"
+        }
+      ]
+    },
+    "AMPLIFY_function_FoodAppUserMethods_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "FoodAppUserMethods"
+        }
+      ]
+    },
     "AMPLIFY_function_authtest5453a3d35453a3d3PostConfirmation_deploymentBucketName": {
       "usedBy": [
         {

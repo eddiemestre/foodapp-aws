@@ -11,12 +11,14 @@ import EmailUpdateForm from "./UpdateEmailForm/index.js";
 import { useOutletContext, useNavigate } from "react-router-dom";
 import DataContext from "../../shared/context/DataContext.js";
 import { useTransition } from "@react-spring/web";
+import useAuth from "../../hooks/useAuth.js";
 
 const UpdateEmail = () => {
     const { setUpdatedEmail } = useContext(DataContext)
     const [confirmationCodeAlert, setConfirmationCodeAlert] = useState(false)
     const delay = ms => new Promise(res => setTimeout(res, ms));
     const navigate = useNavigate();
+    const { auth } = useAuth();
 
 
     const PauseConfirmationAlertAnimation = async () => {
@@ -46,10 +48,10 @@ const UpdateEmail = () => {
             <OuterContainer>
                 <SettingsContainer>
                     <PageTitle>
-                        <MyReviews onClick={(() => navigate(`/settings`))}>Settings</MyReviews>
+                        <MyReviews onClick={(() => navigate(`/${auth?.username}/settings`))}>Settings</MyReviews>
                     </PageTitle>
                     <Container>
-                        <EmailUpdateForm setUpdatedEmail={setUpdatedEmail} setConfirmationCodeAlert={setConfirmationCodeAlert} />
+                        <EmailUpdateForm setUpdatedEmail={setUpdatedEmail} setConfirmationCodeAlert={setConfirmationCodeAlert}/>
                     </Container>
                 </SettingsContainer>
             </OuterContainer>

@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "paths": {
+    "/users/public/{username}": {
+      "name": "/users/public/{username}",
+      "lambdaFunction": "FoodAppPublicUserData",
+      "permissions": {
+        "setting": "protected",
+        "auth": [
+          "read"
+        ],
+        "guest": [
+          "read"
+        ]
+      }
+    },
+    "/users/private/{identityid}": {
+      "name": "/users/private/{identityid}",
+      "lambdaFunction": "FoodAppUserMethods",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ]
+      }
+    }
+  }
+}
