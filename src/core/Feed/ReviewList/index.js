@@ -1,31 +1,29 @@
 import React from "react";
 import { ReviewContainer, AddText, MyReviews, TextContainer, UserReviewsTitle, ReviewFeedContainer } from './Styles'
 import ReviewListModule from "./ReviewListModule/index.js";
-// import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import useAuth from "../../../hooks/useAuth";
 
-const ReviewList = ({reviews, anonUser, auth}) => {
-    // const params = useParams();
+const ReviewList = ({reviews, currentPageUser}) => {
+    const { auth } = useAuth();
+    const params = useParams();
 
-    // when testing DB gets, see if an empty array suffices here
-    // **************
-    // **************
     const DisplayReviews = () => {
-        // if (reviews) {
-            if (reviews.length > 0) {
-                return (
-                    reviews.map(review => (
-                        <ReviewListModule key={review.id} review={review}/>
-                    ))
-                )
-            } else {
-                return (
-                    AddReviewText()
-                )
-            }
+        if (reviews.length > 0) {
+            return (
+                reviews.map(review => (
+                    <ReviewListModule key={review.review_id} review={review}/>
+                ))
+            )
+        } else {
+            return (
+                AddReviewText()
+            )
+        }
     }
 
     const AddReviewText = () => {
-        if (auth.name) {
+        if (auth?.name === currentPageUser?.name) {
             return (
                 <TextContainer><AddText>Add your first review by<br/>clicking the + icon below!</AddText></TextContainer>
             )
@@ -40,11 +38,10 @@ const ReviewList = ({reviews, anonUser, auth}) => {
     return (
         <ReviewContainer>
             <UserReviewsTitle>
-                {/* {auth?.username === params.username */}
-                {auth?.username
+                {auth?.username === currentPageUser?.username
                     ? <MyReviews>My Reviews</MyReviews>
-                    : anonUser?.name
-                        ? <MyReviews>{anonUser.name}'s Reviews</MyReviews>
+                    : currentPageUser?.name
+                        ? <MyReviews>{currentPageUser.name}'s Reviews</MyReviews>
                         : <MyReviews></MyReviews>
                 }
             </UserReviewsTitle>

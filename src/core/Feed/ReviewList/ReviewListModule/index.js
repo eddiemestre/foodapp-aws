@@ -25,13 +25,13 @@ const ReviewListModule = ({ review }) => {
     const handleClick = (event) => {
         // setFromReviewFeed(true)
         // navigate(`/user/${params.username}/${event}`)
-        navigate(`/${params.username}/${event}`)
+        navigate(`/${params.username}/feed/${event}`)
     }
 
     return(
         <>
         {!isLoading && 
-            <ReviewModule onClick={() => handleClick(review.id)}>
+            <ReviewModule onClick={() => handleClick(review.review_id)}>
                 <ReviewTitle>
                     {review.title}
                 </ReviewTitle>

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useState } from "react"
 import {    GlobalStyle,
             OuterContainer,
             SettingsContainer,
@@ -8,13 +8,12 @@ import {    GlobalStyle,
             NoticeContainer,
             NoticeText } from './Styles.js';
 import EmailUpdateForm from "./UpdateEmailForm/index.js";
-import { useOutletContext, useNavigate } from "react-router-dom";
-import DataContext from "../../shared/context/DataContext.js";
+import { useNavigate } from "react-router-dom";
 import { useTransition } from "@react-spring/web";
 import useAuth from "../../hooks/useAuth.js";
 
+// email wrapper
 const UpdateEmail = () => {
-    const { setUpdatedEmail } = useContext(DataContext)
     const [confirmationCodeAlert, setConfirmationCodeAlert] = useState(false)
     const delay = ms => new Promise(res => setTimeout(res, ms));
     const navigate = useNavigate();
@@ -51,7 +50,7 @@ const UpdateEmail = () => {
                         <MyReviews onClick={(() => navigate(`/${auth?.username}/settings`))}>Settings</MyReviews>
                     </PageTitle>
                     <Container>
-                        <EmailUpdateForm setUpdatedEmail={setUpdatedEmail} setConfirmationCodeAlert={setConfirmationCodeAlert}/>
+                        <EmailUpdateForm setConfirmationCodeAlert={setConfirmationCodeAlert}/>
                     </Container>
                 </SettingsContainer>
             </OuterContainer>

@@ -3,6 +3,7 @@ import { Container, GlobalStyle, NoticeContainer, NoticeText } from './Styles.js
 import CreateReviewModule from "./CreateReviewModule/index.js";
 import { useTransition } from '@react-spring/web';
 
+// create review form wrapper
 const CreateReview = () => {
     const [createReviewError, setcreateReviewError] = useState(false);
     const delay = ms => new Promise(res => setTimeout(res, ms));

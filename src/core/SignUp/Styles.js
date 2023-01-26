@@ -54,6 +54,23 @@ export const NoticeContainer = styled(animated.div)`
     font-family: 'Open Sans', sans-serif;
 `;
 
+export const NoticeContainerError = styled(animated.div)` 
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    left: 10%;
+    margin-top: 35%;
+    background: #C56679;
+    color: white;
+    z-index: 6000;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
+`;
+
 export const NoticeText = styled.div` 
     margin: auto;
     text-align: center;

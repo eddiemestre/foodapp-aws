@@ -4,6 +4,18 @@ const AWS = require('aws-sdk')
  * Lambda function for signing up a new user. 
  */ 
 
+
+/**
+ * The following errors are possible:
+ * Uniques Failed:
+ *    Misc/UnknownError - throw generic error on frontend
+ *    UserNameExistsError
+ *    EmailExistsError
+ * 
+ * Sign Up Failed:
+ *    Misc - throw generic error on frontend
+ */  
+
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */

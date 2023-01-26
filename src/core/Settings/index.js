@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth.js";
 import DataContext from "../../shared/context/DataContext.js";
 
+// settings form wrapper
 const Settings = () => {
     const { auth } = useAuth();
     const { updatedPassword, setUpdatedPassword, updatedEmail, setUpdatedEmail, updatedSettings, setUpdatedSettings } = useContext(DataContext);

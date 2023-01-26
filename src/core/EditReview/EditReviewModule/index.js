@@ -17,7 +17,7 @@ import { DetailsContainer,
 
 import "react-datepicker/dist/react-datepicker.css";
 import ToggleSwitch from "../../../shared/components/ToggleSwitch/index.js";
-import ReviewContent from "./ReviewContent/index.js";
+import ReviewContent from "../../../shared/components/ReviewContent/index.js";
 import './datepicker.scss';
 import { useTransition } from '@react-spring/web';
 import { useNavigate, useParams } from "react-router-dom";
@@ -150,7 +150,7 @@ const EditReviewModule = ({ setInputHasChanged, inputHasChanged, setDiscardModal
 
         if (!inputHasChanged) {
             // console.log("no changes made")
-            navigate(`/${auth?.username}/${params.id}`)
+            navigate(`/${auth?.username}/feed/${params.id}`)
             return;
         }
 
@@ -183,19 +183,27 @@ const EditReviewModule = ({ setInputHasChanged, inputHasChanged, setDiscardModal
             return;
         }
 
+        // set updated Time -  but only after checking that other changes
+        // have been made
+        data["updatedAt"] = new Date()
+
         try {
-            const response = await API.graphql(graphqlOperation(updateReview, {input: data} ))
-            const responseData = response.data.updateReview
-            // console.log("response", response)
-            // console.log("data", responseData)
+            const requestInfo = {
+                response: true,
+                body: data
+            }
+
+            const reviewData = await API.put('foodappreviewsapi', `/reviews/${auth.identityId}/${params?.id}`, requestInfo)
+            const responseData = reviewData.data
+            // console.log("updated review data", responseData)
 
 
             // update state with amended review data
-            if (userReviewsData) {
+            if (userReviewsData?.reviewData) {
                 // update review and place back in user reviews data
                 // console.log("user reviews data exists")
-                const updatedState = userReviewsData.map(review => {
-                    if (review.id === responseData?.id) {
+                const updatedState = userReviewsData.reviewData.map(review => {
+                    if (review.review_id === responseData?.review_id) {
                         return {...review,
                         title: responseData?.title,
                         content: responseData?.content,
@@ -209,7 +217,10 @@ const EditReviewModule = ({ setInputHasChanged, inputHasChanged, setDiscardModal
                 });
                 updatedState.sort((a, b) =>  (a.date===null)-(b.date===null) || new Date(b.date) - new Date(a.date) || a.title.localeCompare(b.title))
 
-                setUserReviewsData(updatedState)
+                setUserReviewsData({
+                    reviewData: updatedState,
+                    username: auth?.username
+                })
             } else {
                 // no user data exists, just this reviews data
                 // update review parts that are present in data
@@ -225,9 +236,7 @@ const EditReviewModule = ({ setInputHasChanged, inputHasChanged, setDiscardModal
             }
 
             CleanUpVariables();
-
-            // navigate(`/user/${auth?.username}/${params.id}`
-            navigate(`/${auth?.username}/${params.id}`)
+            navigate(`/${auth?.username}/feed/${params.id}`)
 
         } catch (err) {
             // console.log(err);

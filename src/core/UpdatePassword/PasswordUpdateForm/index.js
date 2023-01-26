@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {Container, 
     InputTitle, 
@@ -13,11 +13,12 @@ import { Auth } from 'aws-amplify';
 import { errors } from '../../../shared/utils/errors';
 import { useExitPrompt } from '../../../hooks/useUnsavedChangesWarning';
 import useAuth from '../../../hooks/useAuth';
+import DataContext from '../../../shared/context/DataContext';
 
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,24}$/;
 
-
-const PasswordUpdate = ({ setUpdatedPassword }) => {
+// password wrapper
+const PasswordUpdate = () => {
     const [oldPass, setOldPass] = useState('');
     const [passNew, setPassNew] = useState('');
     const [passNewConfirm, setPassNewConfirm] = useState('');
@@ -28,6 +29,7 @@ const PasswordUpdate = ({ setUpdatedPassword }) => {
     const [isPassSame, setIsPassSame] = useState(false);
     const [showExitPrompt, setShowExitPrompt] = useExitPrompt()
     const { auth } = useAuth();
+    const { setUpdatedPassword } = useContext(DataContext)
 
     const navigate = useNavigate();
     
@@ -74,7 +76,7 @@ const PasswordUpdate = ({ setUpdatedPassword }) => {
         // throw errors if updating password fails on the backend
         try {
             const user = await Auth.currentAuthenticatedUser()
-            const response = await Auth.changePassword(user, oldPass, passNew)
+            await Auth.changePassword(user, oldPass, passNew)
             // console.log(response)
 
             // clear input fields, set state back to empty strings
@@ -86,7 +88,7 @@ const PasswordUpdate = ({ setUpdatedPassword }) => {
             setUpdatedPassword(true)
             navigate(`/${auth?.username}/settings`)
         } catch (err) {
-            console.log("error changing password", err.response)
+            // console.log("error changing password", err.response)
             // if the current password is not valid, notify user that their old
             // password was entered incorrectly
             if (err.name === "NotAuthorizedException") {

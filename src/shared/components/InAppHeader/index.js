@@ -1,9 +1,10 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import { HeadContainer, AppName, SvgContainer, MenuBackground, MenuContainer } from './Styles.js';
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth.js";
 import { useTransition } from '@react-spring/web';
 import MenuModal from "../Menu/index.js";
+
 const InAppHeader = () => {
     const navigate = useNavigate();
     const { auth } = useAuth();
@@ -26,7 +27,12 @@ const InAppHeader = () => {
     });
 
     const handleHeaderClick = () => {
-        navigate(`/${auth?.username}/feed`) 
+        if (auth?.username) {
+            navigate(`/${auth?.username}/feed`) 
+        } else {
+            navigate(`/`) 
+
+        }
     }
 
     return(

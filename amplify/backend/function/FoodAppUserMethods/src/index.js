@@ -117,7 +117,6 @@ const ProcessRequest = async (userSub, httpMethod, params=null) => {
                 responseBody.name = err.code
                 statusCode = err.statusCode 
             }
-
             break;
         default:    // users cannot delete their data
             break;

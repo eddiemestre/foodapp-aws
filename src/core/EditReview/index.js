@@ -14,22 +14,19 @@ import DiscardModal from "../../shared/components/DiscardModal/index.js";
 import NotFound from "../../shared/components/NotFound/index.js";
 import DataContext from "../../shared/context/DataContext.js";
 import SingleReviewContext from "../../shared/context/SingleReviewContext.js";
-import { deleteReview } from "../../graphql/mutations.js";
-import { API, graphqlOperation } from "aws-amplify";
-import { formatDate } from "../../shared/utils/FormatDate.js";
+import { API } from "aws-amplify";
 import { useExitPrompt } from "../../hooks/useUnsavedChangesWarning.js";
-import { errors } from "../../shared/utils/errors.js";
 import useAuth from "../../hooks/useAuth.js";
 
+// edit review form wrapper
 const EditReview = () => {
 
     // hooks
     const navigate = useNavigate();
     const params = useParams();
-    const { userReviewsData, setUserReviewsData, currentReview, setCurrentReview } = useContext(DataContext)
+    const { userReviewsData, setUserReviewsData, setCurrentReview } = useContext(DataContext)
     const { isLoading, notFound} = useContext(SingleReviewContext)
     const [showExitPrompt, setShowExitPrompt] = useExitPrompt()
-    const [ errorMessages, setErrorMessages] = useState({})
     const { auth } = useAuth();
 
     // state
@@ -100,16 +97,17 @@ const EditReview = () => {
         // console.log("delete review from database")
         try {
             // console.log("in try delete")
-            const response = await API.graphql(graphqlOperation(deleteReview, {input: {id: (params.id).toString()}} ))
-            const responseData = response.data.deleteReview
-            // console.log("response", response)
-            // console.log("data", responseData)
+            const responseData = await API.del('foodappreviewsapi', `/reviews/${auth.identityId}/${params?.id}`, {response: true})
+            console.log("delete review response", responseData)
             
             // remove review from local list
-            if (userReviewsData) {
+            if (userReviewsData?.reviewData) {
                 // console.log("wipe review from user review data")
-                const reviewsList = userReviewsData.filter(review => (review.id).toString() !== params.id)
-                setUserReviewsData(reviewsList)
+                const reviewsList = userReviewsData.reviewData.filter(review => (review.review_id).toString() !== params.id)
+                setUserReviewsData({
+                    reviewData: reviewsList,
+                    username: params.username
+                })
             } else {    // wipe current review data
                 // console.log("wipe current review data")
                 setCurrentReview(null)
@@ -118,7 +116,6 @@ const EditReview = () => {
             setInputHasChanged(false)
             setShowExitPrompt(false)
             navigate(`/${auth?.username}/feed`)
-            // navigate(`/user/${params.username}/`)
         } catch (err) {
             // console.log(err);
             // set error alert
@@ -142,7 +139,7 @@ const EditReview = () => {
         if (inputHasChanged === false) {
             // console.log("review modal true, changing to false. No changes detected")
             // navigate(`/user/${params.username}/${params.id}`)
-            navigate(`/${auth?.username}/${params.id}/`)
+            navigate(`/${auth?.username}/feed/${params.id}/`)
             
         } else {
             // console.log("Discard Modal false, changing to True")
@@ -177,8 +174,7 @@ const EditReview = () => {
             setDiscardModal(false)
             setInputHasChanged(false)
             setShowExitPrompt(false)
-            // navigate(`/user/${params.username}/${params.id}`)
-            navigate(`/${auth.username}/${params.id}`)
+            navigate(`/${auth?.username}/feed/${params?.id}`)
         } else {
             await DeleteThisReview()
         }

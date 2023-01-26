@@ -12,20 +12,19 @@ import {Container,
         ReadOnlyContainer,
         SaveButton } from "./Styles";
 import useAuth from '../../../hooks/useAuth';
-import { Auth, API } from 'aws-amplify';
+import { API } from 'aws-amplify';
 import DataContext from '../../../shared/context/DataContext';
 import { errors } from '../../../shared/utils/errors';
 import { useExitPrompt } from '../../../hooks/useUnsavedChangesWarning';
 
 const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
-const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 
 const SettingsForm = () => {
     // hooks
     const { auth, setAuth } = useAuth();
     const navigate = useNavigate();
-    const { setUpdatedSettings } = useContext(DataContext);
+    const { setUpdatedSettings, userReviewsData, setUserReviewsData, setCurrentPageUser } = useContext(DataContext);
     const [showExitPrompt, setShowExitPrompt] = useExitPrompt()
 
     // state
@@ -91,7 +90,6 @@ const SettingsForm = () => {
         // console.log("Submit settings change")
 
         const userCheck = USER_REGEX.test(username);
-        // const emailCheck = EMAIL_REGEX.test(email);
 
         // if username is invalid, throw error
         if (!userCheck) {
@@ -111,25 +109,11 @@ const SettingsForm = () => {
             return;
         }
 
-        // create a data object to capture updates to the 
-        // name and username. This object will be sent to the backend
-        // let data = {}
-
-        // if (orName !== name) {
-        //     data['name'] = name
-        // }
-        // if (orUsername !== username) {
-        //     data['preferred_username'] = username
-        // }
-
         // updates user attributes
         // sets updated auth state
         // sets settings change alert to true
         // throws error if there is an issue
         try {
-            // console.log("send response to graphQL")
-            // TODO:
-            // check if username is unique
             const requestInfo = {
                 response: true,
                 body: {
@@ -138,32 +122,51 @@ const SettingsForm = () => {
                 }
             }
 
-            const response = await API.put('foodappusermethods', '/users', requestInfo)
-    
-            // const user = await Auth.currentAuthenticatedUser();
-            // const response = await Auth.updateUserAttributes(user, data);
-            console.log("update user settings", response)
+            const response = await API.put('foodappusermethods', `/users/private/${auth?.identityId}`, requestInfo)
+            // console.log("update user settings", response)
 
-            console.log("updated:", response?.data)
+            // console.log("updated:", response?.data)
+            
             // update auth state
             setAuth(prevState => ({
                 ...prevState,
-                "username": response?.data?.username || orUsername,
-                "name": response?.data?.name || orName
+                username: response?.data?.username || orUsername,
+                name: response?.data?.name || orName
               }))
+            
+
+            // if we changed the username and the current review data is of the 
+            // authed user, we also want to update that
+            if (response?.data?.username && userReviewsData?.username === orUsername) {
+                // console.log("user review data exists!")
+                setUserReviewsData(prevState => ({
+                    ...prevState,
+                    username: response?.data?.username
+                }))
+                // update current page user
+                setCurrentPageUser({
+                    username: response?.data?.username || orUsername,
+                    name: response?.data?.name || orName
+                })
+            }
 
             // set updated settings alert
             setUpdatedSettings(true)
 
         } catch (err) {
-            console.log("error updating user settings", err.response)
+            // console.log("error updating user settings", err.response)
             // TODO:
             // will eventually check that username is unique. For now
             // throws a generic error if something goes wrong
-            setErrorMessages({name: "genericError", message: errors.genericError})
+            if (err.response?.data?.name === "UsernameExistsError") {
+                setErrorMessages({name: "usernameTaken", message: errors.usernameTaken})
+            } else {
+                setErrorMessages({name: "genericError", message: errors.genericError})
+            }
         }
     }
 
+    // update name state
     const OnNameChange = (event) => {
         setName(event.target.value)
         if (errorMessages) {
@@ -171,6 +174,7 @@ const SettingsForm = () => {
         }
     }
 
+    // update username state
     const OnUsernameChange = (event) => {
         setUsername(event.target.value)
         if (errorMessages) {

@@ -1,6 +1,10 @@
 import React from "react";
 import "./Styles.css";
 
+/**
+ * Toggle Private Review Switch
+ * In the database, private is set to 1 (true) or 0 (false)
+ */ 
 const ToggleSwitch = ({ isPrivate, setIsPrivate, setInputHasChanged, label }) => {
 
     const triggerToggle = () => {
@@ -9,8 +13,7 @@ const ToggleSwitch = ({ isPrivate, setIsPrivate, setInputHasChanged, label }) =>
         } else {
             setIsPrivate(0)
         }
-        // setIsPrivate(!isPrivate)
-        // // console.log(isPrivate);
+        // console.log(isPrivate);
         setInputHasChanged(true)
     }
 

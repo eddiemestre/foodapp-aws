@@ -18,25 +18,13 @@
         "Users": {}
       },
       "function": {
-        "lambdatest": {
-          "deploymentBucketName": "amplify-authtest-dev-184936-deployment",
-          "s3Key": "amplify-builds/lambdatest-7932736d6d3164357475-build.zip"
-        },
-        "authtest5453a3d35453a3d3PostConfirmation": {
-          "deploymentBucketName": "amplify-authtest-dev-184936-deployment",
-          "s3Key": "amplify-builds/authtest5453a3d35453a3d3PostConfirmation-4e44796934703838572f-build.zip"
-        },
-        "authtest5453a3d35453a3d3PreSignup": {
-          "deploymentBucketName": "amplify-authtest-dev-184936-deployment",
-          "s3Key": "amplify-builds/authtest5453a3d35453a3d3PreSignup-512b6b4e545357456678-build.zip"
-        },
         "FoodAppSignUp": {
           "deploymentBucketName": "amplify-authtest-dev-184936-deployment",
-          "s3Key": "amplify-builds/FoodAppSignUp-77545770774134457852-build.zip"
+          "s3Key": "amplify-builds/FoodAppSignUp-33383844694a5947307a-build.zip"
         },
         "FoodAppSignUpConfirmation": {
           "deploymentBucketName": "amplify-authtest-dev-184936-deployment",
-          "s3Key": "amplify-builds/FoodAppSignUpConfirmation-427771763656714c7264-build.zip"
+          "s3Key": "amplify-builds/FoodAppSignUpConfirmation-2f31744376786d394445-build.zip"
         },
         "FoodAppUpdateEmailConfirmation": {
           "deploymentBucketName": "amplify-authtest-dev-184936-deployment",
@@ -44,11 +32,11 @@
         },
         "FoodAppUserMethods": {
           "deploymentBucketName": "amplify-authtest-dev-184936-deployment",
-          "s3Key": "amplify-builds/FoodAppUserMethods-6770334c43356a634b62-build.zip"
+          "s3Key": "amplify-builds/FoodAppUserMethods-6a79653233385150546b-build.zip"
         },
         "FoodAppReviewMethods": {
           "deploymentBucketName": "amplify-authtest-dev-184936-deployment",
-          "s3Key": "amplify-builds/FoodAppReviewMethods-417656644d6532524b41-build.zip"
+          "s3Key": "amplify-builds/FoodAppReviewMethods-73734d68775248766948-build.zip"
         },
         "FoodAppPublicReviews": {
           "deploymentBucketName": "amplify-authtest-dev-184936-deployment",
@@ -60,7 +48,6 @@
         }
       },
       "api": {
-        "lambdaapitest": {},
         "foodappsignupapi": {},
         "foodappsignupconfirmationapi": {},
         "foodappemailupdateapi": {},

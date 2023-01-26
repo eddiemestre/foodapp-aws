@@ -11,7 +11,6 @@ import { useTransition } from '@react-spring/web'
 import Footer from "../../shared/components/Footer/index.js";
 import Phone from '../../static/reviews_iphone-2.png';
 import { useNavigate } from "react-router-dom";
-import { API } from "aws-amplify";
 
 const Home = () => {
     const navigate = useNavigate();
@@ -30,13 +29,13 @@ const Home = () => {
         delay: 100
     });
 
-    // useEffect(() => {
-    //     const tempEmail = localStorage?.email || null
-    //     localStorage.clear()
-    //     if (tempEmail) {
-    //       localStorage.setItem("email", tempEmail)
-    //     }
-    //   }, [])
+    useEffect(() => {
+        const tempEmail = localStorage.getItem('email') || null
+        localStorage.clear()
+        if (tempEmail) {
+          localStorage.setItem("email", tempEmail)
+        }
+      }, [])
 
 
     return (
@@ -56,7 +55,6 @@ const Home = () => {
                     ? <WelcomeText style={style}>Track your favorite restaurants and tell your friends what's tasty.</WelcomeText>
                     : ''
                 )}
-                 {/* <RegisterButton onClick={() => navigate('/register')}>Sign Up</RegisterButton> */}
                  <RegisterButton onClick={() => navigate('/signup')}>Sign Up</RegisterButton>
               </WelcomeContainer>
             </GridContainer>

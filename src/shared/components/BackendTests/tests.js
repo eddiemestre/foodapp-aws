@@ -168,7 +168,6 @@ const SignUpUser = async (user_params=null) => {
             throw new Error("No User sub found")
         }
         console.log('✔ signed up new user. Usersub:' + user?.data?.UserSub)
-        return user?.data?.userSub
     } catch (err) {
         console.error('✖ error signing up user', err.response)
     }

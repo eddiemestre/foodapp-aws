@@ -5,6 +5,27 @@ const AWS = require('aws-sdk')
  */ 
 
 /**
+ * The following errors are possible:
+ * Request Details Incorrect:
+ *    MissingCredentialsError
+ * 
+ * Uniques Failed:
+ *    Misc/UnknownError - throw generic error on frontend
+ *    UserNameExistsError
+ *    EmailExistsError
+ * 
+ * ConfirmSignUp Failed:
+ *    Generic - throw generic error on frontend
+ * 
+ * AddDataToTables Failed:
+ *    Generic - throw generic error on frontend
+ * 
+ * DeleteUser
+ *    ForcedUnverificationError - show this if AddToDataTables failed
+ *    Generic - would require a Log check - this should be highly unusual
+ */   
+
+/**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
 

@@ -29,6 +29,7 @@ import PublicTemplate from '../shared/routes/PublicRouteTemplate';
 import ReviewAdderTemplate from '../shared/routes/PersistentReviewAdder';
 import InAppTemplate from '../shared/routes/InAppTemplate';
 import PersistReviewLayout from '../shared/routes/ReviewContextLayout';
+import CreateReviewLayout from '../shared/routes/ReviewCreatorLayout';
 // import InAppTemplate from '../Routes/InAppTemplate';
 // import ReviewAdderTemplate from '../Routes/PersistentReviewAdder';
 
@@ -67,7 +68,7 @@ function App() {
     <AuthProvider>
       <DataProvider>
         {/* for testing */}
-        <BackendTests/> 
+        {/* <BackendTests/>  */}
         { width < 600 || width == undefined ?
           <>
             <Routes>
@@ -80,7 +81,7 @@ function App() {
                 <Route element={<RequireAuth />}>
                   <Route element={<InAppTemplate />}>
                       <>
-                        <Route element={<ReviewAdderTemplate />}>
+                        <Route element={<CreateReviewLayout />}>
                           <Route path="/:username/feed" element={<Feed />} />
                           <Route path="/:username/create-review" element={<CreateReview />}/>
                         </Route>

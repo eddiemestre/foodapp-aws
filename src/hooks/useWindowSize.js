@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 
+// determines window size for responsiveness
 const useWindowSize = () => {
     const [windowSize, setWindowSize] = useState({
         width: undefined,

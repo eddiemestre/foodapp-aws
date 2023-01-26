@@ -85,20 +85,6 @@
       ],
       "providerPlugin": "awscloudformation",
       "service": "API Gateway"
-    },
-    "lambdaapitest": {
-      "dependsOn": [
-        {
-          "attributes": [
-            "Name",
-            "Arn"
-          ],
-          "category": "function",
-          "resourceName": "lambdatest"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "API Gateway"
     }
   },
   "auth": {
@@ -165,21 +151,6 @@
       "service": "Lambda"
     },
     "FoodAppUserMethods": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "authtest5453a3d35453a3d3PostConfirmation": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "authtest5453a3d35453a3d3PreSignup": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "lambdatest": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
@@ -295,54 +266,6 @@
         {
           "category": "function",
           "resourceName": "FoodAppUserMethods"
-        }
-      ]
-    },
-    "AMPLIFY_function_authtest5453a3d35453a3d3PostConfirmation_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "authtest5453a3d35453a3d3PostConfirmation"
-        }
-      ]
-    },
-    "AMPLIFY_function_authtest5453a3d35453a3d3PostConfirmation_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "authtest5453a3d35453a3d3PostConfirmation"
-        }
-      ]
-    },
-    "AMPLIFY_function_authtest5453a3d35453a3d3PreSignup_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "authtest5453a3d35453a3d3PreSignup"
-        }
-      ]
-    },
-    "AMPLIFY_function_authtest5453a3d35453a3d3PreSignup_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "authtest5453a3d35453a3d3PreSignup"
-        }
-      ]
-    },
-    "AMPLIFY_function_lambdatest_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "lambdatest"
-        }
-      ]
-    },
-    "AMPLIFY_function_lambdatest_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "lambdatest"
         }
       ]
     }

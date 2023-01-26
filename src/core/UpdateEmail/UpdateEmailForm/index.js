@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {Container, 
+import {Container,
     InputTitle, 
     InputText, 
     Error, 
@@ -14,12 +14,16 @@ import { Auth, API } from 'aws-amplify';
 import useAuth from '../../../hooks/useAuth';
 import { errors } from '../../../shared/utils/errors';
 import { useExitPrompt } from '../../../hooks/useUnsavedChangesWarning';
+import DataContext from '../../../shared/context/DataContext';
 
-const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,24}$/;
+const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 
-const EmailUpdateForm = ({ setUpdatedEmail, setConfirmationCodeAlert }) => {
+// email update form
+const EmailUpdateForm = ({ setConfirmationCodeAlert }) => {
     const [newEmail, setNewEmail] = useState('');
+    const [orEmail, setOrEmail] = useState('')
+    const { setUpdatedEmail } = useContext(DataContext)
     const [renderConfirmationCodeForm, setrenderConfirmationCodeForm] = useState(false)
     const [confirmationCode, setConfirmationCode] = useState(null)
     const [errorMessages, setErrorMessages] = useState({});
@@ -38,6 +42,10 @@ const EmailUpdateForm = ({ setUpdatedEmail, setConfirmationCodeAlert }) => {
             setShowExitPrompt(false)
         }
     }, [])
+
+    useEffect(() => {
+        setOrEmail(auth?.email || '')
+    }, [auth])
 
     // use effect for updated email field
     useEffect(() => {
@@ -58,10 +66,19 @@ const EmailUpdateForm = ({ setUpdatedEmail, setConfirmationCodeAlert }) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         // console.log("Submit email change")
+        setNewEmail(newEmail.toLowerCase().trim())
 
         // if email is same as current email, throw error
-        if (newEmail.toLowerCase().trim() === auth.email) {
+        if (newEmail === auth.email) {
             setErrorMessages({name: emailError, message: errors.sameEmailAsCurrent})
+            return;
+        }
+
+        const emailCheck = EMAIL_REGEX.test(newEmail);
+        // if email is invalid, throw error
+        if (!emailCheck) {
+            setErrorMessages({name: "invalidEmailEerror", message: errors.invalidEmailEerror}); 
+            setNewEmail(orEmail)
             return;
         }
 
@@ -72,7 +89,7 @@ const EmailUpdateForm = ({ setUpdatedEmail, setConfirmationCodeAlert }) => {
         // Otherwise this will throw a UserNotFoundException exception
         // which should be ignored
         try {
-            await Auth.confirmSignUp(newEmail.toLowerCase().trim(), "000000", {
+            await Auth.confirmSignUp(newEmail, "000000", {
                 forceAliasCreation: false
             });
             return;
@@ -96,9 +113,9 @@ const EmailUpdateForm = ({ setUpdatedEmail, setConfirmationCodeAlert }) => {
             const user = await Auth.currentAuthenticatedUser();
 
             const result = await Auth.updateUserAttributes(user, {
-              email: newEmail.toLowerCase().trim(),
+              email: newEmail,
             });
-            console.log("result update email", result)
+            // console.log("result update email", result)
 
             if (errorMessages) {
                 setErrorMessages({})
@@ -106,7 +123,7 @@ const EmailUpdateForm = ({ setUpdatedEmail, setConfirmationCodeAlert }) => {
             setrenderConfirmationCodeForm(true)
   
         } catch (err) {
-            console.log("error submitting new email", err)
+            // console.log("error submitting new email", err)
             setErrorMessages({name: emailError, message: errors.genericEmailError})
         }
     }
@@ -122,13 +139,10 @@ const EmailUpdateForm = ({ setUpdatedEmail, setConfirmationCodeAlert }) => {
         //Prevent page reload
         event.preventDefault();
         // console.log("confirm account")
-        // const authCode = confirmationCode
-
-
 
         try {
             const user = await Auth.currentAuthenticatedUser();
-            console.log("accessToken: ", user.signInUserSession.accessToken.jwtToken)
+            // console.log("accessToken: ", user.signInUserSession.accessToken.jwtToken)
             
             const requestInfo = {
                 response: true,
@@ -136,22 +150,20 @@ const EmailUpdateForm = ({ setUpdatedEmail, setConfirmationCodeAlert }) => {
                     accessToken: user.signInUserSession.accessToken.jwtToken,
                     AttributeName: "Email address",
                     Code: confirmationCode,
-                    newEmail: newEmail.toLowerCase().trim()
+                    newEmail: newEmail
     
                 }
             }
-            const response = await API.put('foodappemailupdateapi', '/emailupdate', requestInfo)
-
-            // const result = await Auth.verifyCurrentUserAttributeSubmit('email', authCode);
+            const response = await await API.put('foodappemailupdateapi', `/email/${auth.identityId}`, requestInfo)            
             
+            // console.log("update email response", response)
             
-            console.log(response)
             setAuth(prevState => ({
                 ...prevState,
-                "email": newEmail.toLowerCase().trim(),
+                "email": newEmail,
               }))
 
-            localStorage.setItem("email", newEmail.toLowerCase().trim())
+            localStorage.setItem("email", newEmail)
 
             // update session and user storage
             await Auth.currentSession({ bypassCache: true})
@@ -163,15 +175,17 @@ const EmailUpdateForm = ({ setUpdatedEmail, setConfirmationCodeAlert }) => {
             navigate(`/${auth?.username}/settings`)
 
         } catch (err) {
-            console.log("error confirming and upating email", err.response)
-            if (err.name === "CodeMismatchException") { // wrong code 
-                setErrorMessages({name: codeError, message: errors.CodeMismatchException})
-            } else if (err.name === "AliasExistsException") {   // user already exists
+            let errName = err?.response?.data?.name
+            // console.log("error confirming and upating email", err.response)
+            // console.log("err name", errName)
+            if (errName === "CodeMismatchException") { // wrong code 
+                setErrorMessages({name: "CodeMismatchException", message: errors.CodeMismatchException})
+            } else if (errName === "AliasExistsException") {   // user already exists
                 setErrorMessages({name: emailError, message: errors.emailTakenError})    
-            } else if (err.name === "ExpiredCodeException") {   // code expired
+            } else if (errName === "ExpiredCodeException") {   // code expired
                 setErrorMessages({ name: codeError, message: errors.ExpiredCodeException})    
             } else {    // generic
-                setErrorMessages({name: codeError, message: errors.genericCodeFailure})
+                setErrorMessages({name: "genericCodeFailure", message: errors.genericCodeFailure})
             }
         }
     }
@@ -195,13 +209,13 @@ const EmailUpdateForm = ({ setUpdatedEmail, setConfirmationCodeAlert }) => {
     const ResendConfirmationCode = async () => {
         try {
             const user = await Auth.currentAuthenticatedUser();
-            const result = await Auth.updateUserAttributes(user, {
-              email: newEmail.toLowerCase(),
+            await Auth.updateUserAttributes(user, {
+              email: newEmail,
             });
             // console.log(result)
             setConfirmationCodeAlert(true)
         } catch (err) {
-            setErrorMessages({name: codeError, message: errors.resendConfirmationError})
+            setErrorMessages({name: "resendConfirmationError", message: errors.resendConfirmationError})
         }
     }
 
@@ -237,6 +251,10 @@ const EmailUpdateForm = ({ setUpdatedEmail, setConfirmationCodeAlert }) => {
                     <InputText placeholder="enter confirmation code..." type="text" name="confirmation code" autoComplete="on" onChange={onChangeConfirmationCode} required/>
                     {renderErrorMessage(codeError)}
                     {renderErrorMessage(emailError)}
+                    {renderErrorMessage("CodeMismatchException")}
+                    {renderErrorMessage("AliasExistsException")}
+                    {renderErrorMessage("ExpiredCodeException")}
+                    {renderErrorMessage("resendConfirmationError")}
                 </InputContainer>
                 <ChoicesContainer>
                     <Save><ChangeButton>Confirm</ChangeButton></Save>

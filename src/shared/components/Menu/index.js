@@ -3,34 +3,37 @@ import { Container, Header, TextContainer, Body, Footer, SvgContainer, Text, Gre
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth.js";
 import useLogout from "../../../hooks/useLogout.js";
-// import useLogout from "../../hooks/useLogout.js";
 
 const MenuModal = ({ setMenuOpened }) => {
     const logout = useLogout();
     const navigate = useNavigate();
-    const { auth, setAuth } = useAuth();
+    const { auth } = useAuth();
 
 
     const closeMenu = () => {
         setMenuOpened(false)
     }
 
+    // when user clicks "Sign Out"
     const signOut = async () => {
         closeMenu();
         await logout();
         navigate(`/login`)
     };
 
+    // if user clicks "Sign Up" (not signed in)
     const signUp = async () => {
         closeMenu();
         navigate('/signup')
     }
 
+    // if user clicks "Sign In" (not signed in)
     const signIn = async () => {
         closeMenu();
         navigate('/login')
     }
 
+    // navigates eto settings (if user signed in)
     const openSettings = async () => {
         closeMenu();
         navigate(`/${auth?.username}/settings`)

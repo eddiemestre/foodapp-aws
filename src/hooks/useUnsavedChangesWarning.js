@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 
+// hook for displaying an alert if there are unsaved changes on a form
 const initBeforeUnload = (showExitPrompt) => {
     window.onbeforeunload = (event) => {
         if (showExitPrompt) {
@@ -22,6 +23,7 @@ export const useExitPrompt = (bool) => {
     };
 
     useEffect(() => {
+        // console.log("show exit prompt", showExitPrompt)
         initBeforeUnload(showExitPrompt)
     }, [showExitPrompt])
 

@@ -8,10 +8,12 @@ import LoginForm from "./LoginForm/index.js";
 import Footer from "../../shared/components/Footer/index.js";
 import DataContext from "../../shared/context/DataContext.js";
 
+// login wrapper
 const Login = () => {
     const delay = ms => new Promise(res => setTimeout(res, ms));
     const { justSignedUp, setJustSignedUp } = useContext(DataContext);
 
+    // animation if user is coming from the signup page and just created an account
     const PauseAnimation = async () => {
         await delay(5000);
         setJustSignedUp(false)

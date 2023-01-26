@@ -12,24 +12,3 @@ export const RequireAuth = () => {
         : <Navigate to="/login" state={{ from: location }} replace />
     );
 }
-
-// export const RequireAuthCreate = () => {
-//     const { toggleReviewOff,
-//             setReviewModuleActive,
-//             setInputHasChanged,
-//             inputHasChanged } = useOutletContext();
-//     const { auth } = useAuth();
-//     const location = useLocation();
-
-//     return (
-//         auth?.name
-//         ? <Outlet context={{ 
-//             toggleReviewOff,
-//             setReviewModuleActive,
-//             setInputHasChanged,
-//             inputHasChanged }}
-//         />
-//         : <Navigate to="/login" state={{ from: location }} replace />
-//     );
-// }
-

@@ -1,20 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { GlobalStyle, GridContainer, NoticeContainer, NoticeText } from "./Styles";
+import React, { useState } from "react";
+import { GlobalStyle, GridContainer, NoticeContainer, NoticeContainerError } from "./Styles";
 import SignUpForm from "./SignUpForm";
 import Footer from "../../shared/components/Footer";
 import { useTransition } from "@react-spring/web";
 
+// Signup Wrapper
 const SignUp = () => {
     const [confirmationCodeAlert, setConfirmationCodeAlert] = useState(false)
-    const delay = ms => new Promise(res => setTimeout(res, ms));
+    const [errorCreatingAccount, setErrorCreatingAccount] = useState(false)
 
-    useEffect(() => {
-        // const tempEmail = localStorage?.email || null
-        // localStorage.clear()
-        // if (tempEmail) {
-        //   localStorage.setItem("email", tempEmail)
-        // }
-      }, [])
+    const delay = ms => new Promise(res => setTimeout(res, ms));
 
     const PauseConfirmationAlertAnimation = async () => {
         await delay(5000);
@@ -29,6 +24,20 @@ const SignUp = () => {
         delay: 500,
         onRest: () => PauseConfirmationAlertAnimation(),
     });
+
+    const PauseAccountCreationErrorAlertAnimation = async () => {
+        await delay(5000);
+        setErrorCreatingAccount(false)
+    }
+
+    const AccountCreationErrorAlert = useTransition(errorCreatingAccount, {
+        from: { opacity: 0, transform: "translateY(-20px)" },
+        enter: { opacity: 1, transform: "translateY(0px)" },
+        leave: { opacity: 0, transform: "translateY(-20px)" },
+        reverse: errorCreatingAccount,
+        delay: 500,
+        onRest: () => PauseAccountCreationErrorAlertAnimation(),
+    });
     return (
         <>
             <GlobalStyle />
@@ -39,8 +48,15 @@ const SignUp = () => {
                 </NoticeContainer>
                 : ''
             )} 
+            {AccountCreationErrorAlert((style, item) =>
+                item ? 
+                <NoticeContainerError style={style}>
+                    <div>Issue creating account. Please try again.</div>
+                </NoticeContainerError >
+                : ''
+            )} 
             <GridContainer>
-                <SignUpForm setConfirmationCodeAlert={setConfirmationCodeAlert}/>
+                <SignUpForm setConfirmationCodeAlert={setConfirmationCodeAlert} setErrorCreatingAccount={setErrorCreatingAccount}/>
             </GridContainer>
             <Footer />
         </>

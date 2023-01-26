@@ -24,7 +24,7 @@ const SingleReviewView = () => {
     const { auth } = useAuth();
     const params = useParams();
     const navigate = useNavigate();
-    const { currentReview } = useContext(DataContext)
+    const { currentReview, currentPageUser } = useContext(DataContext)
     const { notFound, isLoading } = useContext(SingleReviewContext)
     const fromReviewFeed = useState(true)
     const [isAuthedUser, setIsAuthedUser] = useState(false) // for edit & back button
@@ -40,14 +40,11 @@ const SingleReviewView = () => {
     useEffect(() => {
         // console.log("update params")
         // setNotFound(false)
-        if (auth) {
+        if (auth?.username === params?.username) {
             setIsAuthedUser(true)
         }
         // setIsLoading(true)
     }, [])
-
-
-
 
     const EditButton = () => {
         return (
@@ -108,8 +105,7 @@ const SingleReviewView = () => {
     });
 
     const handleEditClick = () => {
-        // navigate(`/user/${auth?.username}/${params.id}/edit`)
-        navigate(`/${auth?.username}/${params.id}/edit`)
+        navigate(`/${auth?.username}/feed/${params.id}/edit`)
     }
 
     const handleBackClick = () => {
@@ -128,8 +124,7 @@ const SingleReviewView = () => {
                             <Title>{currentReview?.title}</Title>
                             </TitleContainer>
                             <ContentContainer>
-                                {/* <Link to={`/user/${review?.username}`} style={{textDecoration: 'none'}}><Name>{review?.name}</Name></Link> */}
-                                <Link to={`/${params.username}/feed`} style={{textDecoration: 'none'}}><Name>{currentReview?.name}</Name></Link>
+                                <Link to={`/${currentPageUser?.username}/feed`} style={{textDecoration: 'none'}}><Name>{currentPageUser?.name}</Name></Link>
                                 <Date>{currentReview?.date_formatted}</Date>
                                 <Content>{currentReview?.content}</Content>
                                 <LastEdited>Last edited on {currentReview?.updatedAt_formatted}</LastEdited>

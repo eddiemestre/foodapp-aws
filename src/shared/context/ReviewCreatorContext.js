@@ -1,13 +1,14 @@
 import { Outlet, useNavigate, useParams, useLocation } from "react-router-dom";
 import {SvgComponent, FaderDivClose, ModalContainer, ButtonContainer} from './Styles';
-import React, { useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { useTransition} from '@react-spring/web';
 import DiscardModal from "../components/DiscardModal";
 import useAuth from "../../hooks/useAuth";
 import { useExitPrompt } from "../../hooks/useUnsavedChangesWarning";
 
-// DEPRECATED, NOT USED
-const ReviewAdderTemplate = () => {
+const ReviewCreatorContext = createContext({});
+
+export const ReviewCreatorProvider = ({ children }) => {
     const [fill, setFill] = useState('#03dac6')
     const [stroke, setStroke] = useState('black')
 
@@ -16,7 +17,8 @@ const ReviewAdderTemplate = () => {
     const [inputHasChanged, setInputHasChanged] = useState(false)   // determines if discard modal should animate
     const [animateButton, setAnimateButton] = useState(true)     // animates review adder/discarder button
     const [urlIsUser, setUrlIsUser] = useState(false)    // ensures button only appears when on the logged in user's feed
-    // const [ showExitPrompt, setShowExitPrompt ] = useExitPrompt()
+    
+    const [ showExitPrompt, setShowExitPrompt ] = useExitPrompt();
 
     // hooks
     const { auth } = useAuth();
@@ -34,6 +36,18 @@ const ReviewAdderTemplate = () => {
             }
         }
     }, [params, auth])
+
+    // useEffect(() => {
+    //     console.log("in use effect")
+    //     console.log("reviewModuleActive", reviewModuleActive)
+    //     console.log("discardModal", discardModal)
+    //     console.log("inputHasChanged", inputHasChanged)
+    // }, [reviewModuleActive, discardModal, inputHasChanged])
+
+    // useEffect(() => {
+    //     console.log("set reviewModuleActive to false")
+    //     setReviewModuleActive(false)
+    // }, [discardModal])
 
     // changes review toggle mode depending on page
     useEffect(() => {
@@ -53,11 +67,12 @@ const ReviewAdderTemplate = () => {
 
     // reset state of showExitPrompt to false when component
     // is unmounted
-    // useEffect(() => {
-    //     return () => {
-    //         setShowExitPrompt(false)
-    //     }
-    // }, [setShowExitPrompt])
+    useEffect(() => {
+        return () => {
+            // console.log("set show exit prompt")
+            setShowExitPrompt(false)
+        }
+    }, [setShowExitPrompt])
 
     const toggleReviewOn = () => {
         setFill('#C56679')
@@ -97,8 +112,8 @@ const ReviewAdderTemplate = () => {
         setDiscardModal(false)
         setReviewModuleActive(false)
         setInputHasChanged(false)
-        // setShowExitPrompt(false)
-        (`/${auth?.username}/feed`)
+        setShowExitPrompt(false)
+        navigate(`/${auth?.username}/feed`)
     }
 
 
@@ -175,13 +190,13 @@ const ReviewAdderTemplate = () => {
 
   return (
     <>
-        <Outlet context={{ 
-                toggleReviewOff,
+        <ReviewCreatorContext.Provider value={{ 
                 setReviewModuleActive,
+                toggleReviewOff,
                 setInputHasChanged,
-                // setShowExitPrompt 
-            }}
-        />
+        }}>
+            {children}
+        </ReviewCreatorContext.Provider>
         {urlIsUser ?
             AnimateReviewButton(animateButton)
         : '' }
@@ -198,4 +213,4 @@ const ReviewAdderTemplate = () => {
   )
 }
 
-  export default ReviewAdderTemplate;
+  export default ReviewCreatorContext;

@@ -6,6 +6,7 @@ export const DataProvider = ({ children }) => {
     //  data
     const [userReviewsData, setUserReviewsData] = useState(null) // set
     const [currentReview, setCurrentReview] = useState(null) // set
+    const [currentPageUser, setCurrentPageUser] = useState(null)
     // state
     const [updatedSettings, setUpdatedSettings] = useState(false) // set
     const [updatedPassword, setUpdatedPassword] = useState(false) // set
@@ -18,6 +19,7 @@ export const DataProvider = ({ children }) => {
         <DataContext.Provider value={{ 
             userReviewsData, setUserReviewsData,
             currentReview, setCurrentReview,
+            currentPageUser, setCurrentPageUser,
             updatedSettings, setUpdatedSettings,
             updatedPassword, setUpdatedPassword,
             updatedEmail, setUpdatedEmail,

@@ -1,6 +1,7 @@
 import React from "react";
 import { CloseModalContainer, Discard, Yes, No } from './Styles.js';
 
+// renders Discard message depending on input
 const DiscardModal = ({type, clickYes, clickNo}) => {
 
     const messages = {

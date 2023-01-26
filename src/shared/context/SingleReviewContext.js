@@ -1,63 +1,109 @@
 import { createContext, useEffect, useState, useContext } from 'react';
 import DataContext from './DataContext';
 import { useParams } from "react-router-dom";
-import { API, graphqlOperation } from 'aws-amplify';
-import { getReview } from '../../graphql/queries';
+import { API } from 'aws-amplify';
 import { formatDate } from '../utils/FormatDate';
+import useAuth from '../../hooks/useAuth';
 
 const SingleReviewContext = createContext({});
 
 export const ReviewProvider = ({ children }) => {
     const [notFound, setNotFound] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
-    const { userReviewsData, currentReview, setCurrentReview } = useContext(DataContext)
+    const { userReviewsData, currentReview, setCurrentReview, currentPageUser, setCurrentPageUser } = useContext(DataContext)
     const params = useParams()
+    const { auth } = useAuth();
 
     useEffect(() => {
-        // console.log("reviews", reviews)
-        setIsLoading(true)
+      setIsLoading(true)
 
-        // fetch single review
-        // grab review based off URL
-        // format Date data and set current review
-        // throw errors if there are issues
-        async function fetchSingleReview() {
-          // console.log("fetch single review if it exists")
-          try {
-            const response = await API.graphql(graphqlOperation(getReview, {id:(params.id).toString()}))
-            const data = response.data.getReview
-
-          //   console.log("data with date", data)
-
-            // if data does not exist, set 404, otherwise format the date data
-            if (!data) {
-              // console.log("no results found")
-              setNotFound(true)
-            } else {
-              data["updatedAt_formatted"] = formatDate(data.updatedAt)
-              data["date_formatted"] = formatDate(data.date)
-              setCurrentReview(data)
+      // fetch user data
+      async function fetchUser() {
+        // get current page user
+        if (auth?.username === params.username) {
+            setCurrentPageUser(() => ({
+                username: auth?.username,
+                name: auth?.name
+            }))
+        } else {
+            try {
+                // console.log("trying to get public user data")
+                const userInfo = await API.get('foodappusermethods', `/users/public/${params.username}`, {response: true})
+                // console.log("successfully got user data:", userInfo?.data)
+                setCurrentPageUser(() => ({
+                    username: userInfo?.data.username,
+                    name: userInfo?.data.name
+                }))
+            } catch (err) {
+                // console.log(err)
+                setNotFound(true)
+                setIsLoading(false)
+                return;
             }
-            // console.log(data)
-            setIsLoading(false)
-          } catch (err) {
-            // console.log(err)
-            setNotFound(true)
-            setIsLoading(false)
           }
+      }
+
+      // fetch single review
+      // grab review based off URL
+      // format Date data and set current review
+      // throw errors if there are issues
+      async function fetchSingleReview() {
+        // console.log("fetch single review")
+        let review;
+        if (auth?.username === params.username) {
+          // console.log("is authed review")
+            try {
+                // get user review data
+                const reviewData = await API.get('foodappreviewsapi', `/reviews/${auth.identityId}/${params.id}`, {response: true})
+                // console.log("got review", reviewData.data)
+                review = reviewData?.data
+            } catch (err) {
+                // console.log("error fetching user review data 1", err)
+                // console.log("error fetching user review data 2", err.response)
+                setNotFound(true)
+                setIsLoading(false)
+                return;
+            }
+        } else {
+          // console.log("is other review")
+            try {
+                // Get all public review
+                const reviewData = await API.get('foodappreviewsapi', `/publicreviews/${params?.username}/${params?.id}`, {response: true})
+                // console.log("public review data", reviewData)
+                review = reviewData?.data
+            } catch (err) {
+                // console.log("error fetching public user review data 1", err)
+                // console.log("error fetching public user review data 2", err.response)
+                setNotFound(true)
+                setIsLoading(false)
+                return;
+            }
         }
+
+        // console.log("review before formatting: ", review)
+        const updatedState = {
+          ...review,
+          updatedAt_formatted: formatDate(review?.updatedAt),
+          date_formatted: formatDate(review?.date)
+        }
+        // console.log("updated review state", updatedState)
+
+        setCurrentReview(updatedState)
+        setIsLoading(false)
+    }
   
         // if there is  userReviewData, we know we've come from the feed and the review with this
         // id exists.
-        if (userReviewsData) {
+        if (userReviewsData && currentPageUser.username === params.username) {
             // console.log("user review data exists")
-            setCurrentReview(userReviewsData.find(review => (review.id).toString() === params.id))
+            setCurrentReview(userReviewsData?.reviewData.find(review => review.review_id === params.id))
             setIsLoading(false)
         } else {
           // if there is no current review or the current review id does not match the URL, fetch a single review
           if (!currentReview || currentReview.id !== params.id) {
             // console.log("current review doesn't exist")
             fetchSingleReview()
+            fetchUser()
           } else {
             setIsLoading(false)
           }

@@ -8,6 +8,7 @@ const { randomUUID } = require('crypto');
  * their own data.
  */ 
 
+
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
@@ -256,7 +257,12 @@ const PostReview = async (userSub, params) => {
     let review;
 
     // define update expression to set the variables
-    let updateExpression = "set #content = :content, #date = :date, #title = :title, #private = :private";
+    let updateExpression = "set #content = :content, "
+                            +   "#date = :date, " 
+                            +   "#title = :title, "
+                            +   "#private = :private, "
+                            +   "#updatedAt = :updatedAt, "
+                            +   "#createdAt = :createdAt"
     
     // define database parameters. Note that we generate a randomUUID for the review_id
     let dbParams = {
@@ -273,17 +279,24 @@ const PostReview = async (userSub, params) => {
             "#content": "content",
             "#date": "date",
             "#title": "title",
-            "#private": "private"
+            "#private": "private",
+            "#updatedAt": "updatedAt",
+            "#createdAt": "createdAt"
         },
         // attributes we're adding to the Table
         ExpressionAttributeValues: {
             ":content": `${params.content}`,
             ":date": `${params.date}`,
             ":title": `${params.title}`,
-            ":private": params.private
+            ":private": params.private,
+            ":updatedAt": `${params?.updatedAt ? params?.updatedAt : new Date()}`,
+            ":createdAt": `${params?.createdAt ? params?.createdAt : new Date()}`
         },
         ReturnValues: "ALL_NEW"
     }
+
+    // debugging
+    console.log("dbParams", dbParams)
 
     try {
         console.log("trying to put item in DB")
@@ -349,8 +362,11 @@ const UpdateReview = async (userSub, review_id, params) => {
         attributeValues[":private"] = params?.private
     }
 
-    // finalize the UpdateExpression string
-    setItems = setItems.substring(0, setItems.length - 2)
+    // set review update date
+    setItems += "#updatedAt = :updatedAt"
+    attributeNames["#updatedAt"] = "updatedAt"
+    attributeValues[":updatedAt"] = `${params?.updatedAt ? params?.updatedAt : new Date()}`
+    
 
     // debugging
     console.log("setItems", setItems)
