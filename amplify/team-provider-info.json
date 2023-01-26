@@ -40,7 +40,7 @@
         },
         "FoodAppPublicReviews": {
           "deploymentBucketName": "amplify-authtest-dev-184936-deployment",
-          "s3Key": "amplify-builds/FoodAppPublicReviews-484453784f2b336e646e-build.zip"
+          "s3Key": "amplify-builds/FoodAppPublicReviews-766f6b4c707a716c5664-build.zip"
         },
         "FoodAppPublicUserData": {
           "deploymentBucketName": "amplify-authtest-dev-184936-deployment",

@@ -172,7 +172,7 @@ const GetPublicUserReviews = async (userSub, review_id=null) => {
             },
             ExpressionAttributeValues: {
                 ":id": `${userSub}`,
-                ":bool": false
+                ":bool": 0
             }
         }
     }

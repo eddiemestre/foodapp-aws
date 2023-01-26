@@ -104,16 +104,15 @@ const Feed = () => {
         if (userReviewsData?.username === params.username && currentPageUser?.username === params.username) {
             // console.log("userReview data exists and matches URL")
             setIsLoading(false)
-        
             // we need to fetch reviews and potentially user data
-        } else if (userReviewsData?.username !== params.username) {
+        } else {
             // if parameters don't match auth, fetch user data
             // console.log("userReview data doesnt exist or doesn't match URL")
             fetchUser()
             fetchReviews()
         }
         
-    }, [setUserReviewsData])
+    }, [setUserReviewsData, params])
 
 
     return (
