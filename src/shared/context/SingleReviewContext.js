@@ -16,6 +16,7 @@ export const ReviewProvider = ({ children }) => {
 
     useEffect(() => {
       setIsLoading(true)
+      setNotFound(false)
 
       // fetch user data
       async function fetchUser() {

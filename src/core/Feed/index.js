@@ -18,6 +18,7 @@ const Feed = () => {
 
     useEffect(() => {
         setIsLoading(true)
+        setNotFound(false)
 
         async function fetchUser() {
             // get current page user
@@ -37,6 +38,8 @@ const Feed = () => {
                     })
                 } catch (err) {
                     // console.log(err)
+                    // console.log("couldn't get reviews")
+                    setCurrentPageUser({})
                     setNotFound(true)
                     setIsLoading(false)
                     return;
@@ -60,6 +63,7 @@ const Feed = () => {
                     // console.log("error fetching user review data 1", err)
                     // console.log("error fetching user review data 2", err.response)
                     setNotFound(true)
+                    setUserReviewsData({})
                     setIsLoading(false)
                     return;
                 }
@@ -72,7 +76,9 @@ const Feed = () => {
                 } catch (err) {
                     // console.log("error fetching public user review data 1", err)
                     // console.log("error fetching public user review data 2", err.response)
+                    // console.log("couldn't get user")
                     setNotFound(true)
+                    setUserReviewsData({})
                     setIsLoading(false)
                     return;
                 }
@@ -101,6 +107,8 @@ const Feed = () => {
         // fetchReviews and user data
         // if our current review and user data matches the path parameters,
         // we are good to go
+        // console.log("user reviews", userReviewsData)
+        // console.log("user data", currentPageUser)
         if (userReviewsData?.username === params.username && currentPageUser?.username === params.username) {
             // console.log("userReview data exists and matches URL")
             setIsLoading(false)
@@ -112,7 +120,7 @@ const Feed = () => {
             fetchReviews()
         }
         
-    }, [setUserReviewsData, params])
+    }, [setUserReviewsData, params, setIsLoading, setNotFound, setCurrentPageUser, auth])
 
 
     return (
