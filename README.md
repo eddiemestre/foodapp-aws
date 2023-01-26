@@ -5,7 +5,7 @@ A mobile web-app that lets users create, read, update, and delete restaurant rev
 View a working demo [here](https://main.d30b8nboe5jb5.amplifyapp.com/). Best viewed on a mobile device or in a desktop browser with a mobile viewport. 
 
 Demo Credentials:  
-email: demo@demo.com  
+email: demo@demofoodapp.com  
 password: demo!234    
 (account creation/login also also supported!)
 
