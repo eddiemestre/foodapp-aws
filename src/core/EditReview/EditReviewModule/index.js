@@ -301,7 +301,7 @@ const EditReviewModule = ({ setInputHasChanged, inputHasChanged, setDiscardModal
                         <InputTitle>My Thoughts</InputTitle>
                         <LargeInputText placeholder= "add review..." type="text" name="review" value={reviewContent} onClick={onThoughtsClick} readOnly="readOnly">
                         </LargeInputText>
-                        <FieldDetailText>Last edited on {formatDate(currentReview?.date_modified)}</FieldDetailText>
+                        <FieldDetailText>Last edited on {formatDate(currentReview?.updatedAt_formatted)}</FieldDetailText>
                         <InputTitle>Make Private?</InputTitle>
                         <SwitchContainer>
                             <ToggleSwitch label="label" isPrivate={isPrivate} setIsPrivate={setIsPrivate} setInputHasChanged={setInputHasChanged}/>
