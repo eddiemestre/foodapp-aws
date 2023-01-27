@@ -9,7 +9,7 @@ const ReviewList = ({reviews, currentPageUser}) => {
     const params = useParams();
 
     const DisplayReviews = () => {
-        if (reviews.length > 0) {
+        if (reviews?.length > 0) {
             return (
                 reviews.map(review => (
                     <ReviewListModule key={review.review_id} review={review}/>
@@ -41,7 +41,7 @@ const ReviewList = ({reviews, currentPageUser}) => {
                 {auth?.username === currentPageUser?.username
                     ? <MyReviews>My Reviews</MyReviews>
                     : currentPageUser?.name
-                        ? <MyReviews>{currentPageUser.name}'s Reviews</MyReviews>
+                        ? <MyReviews>{currentPageUser?.name}'s Reviews</MyReviews>
                         : <MyReviews></MyReviews>
                 }
             </UserReviewsTitle>

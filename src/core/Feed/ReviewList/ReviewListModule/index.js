@@ -5,7 +5,7 @@ import { formatDate } from "../../../../shared/utils/FormatDate.js";
 
 const ReviewListModule = ({ review }) => {
     const [isLoading, setIsLoading] = useState(true)
-    const [formattedDate, setformattedDate] = useState(review.date || null)
+    const [formattedDate, setformattedDate] = useState(review?.date || null)
     const [rerender, setRerender] = useState(false);
     const navigate = useNavigate();
     const params = useParams();
@@ -31,15 +31,15 @@ const ReviewListModule = ({ review }) => {
     return(
         <>
         {!isLoading && 
-            <ReviewModule onClick={() => handleClick(review.review_id)}>
+            <ReviewModule onClick={() => handleClick(review?.review_id)}>
                 <ReviewTitle>
-                    {review.title}
+                    {review?.title}
                 </ReviewTitle>
                 <ReviewDate>
-                    {review.date_formatted}
+                    {review?.date_formatted}
                 </ReviewDate>
                 <ReviewPreview>
-                    {review.content}
+                    {review?.content}
                 </ReviewPreview>
             </ReviewModule>
         }
