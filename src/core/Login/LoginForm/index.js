@@ -10,6 +10,7 @@ import { App,
         NoAccount } from '../../../shared/components/FormStyles/Styles'
 
 import useInput from "./PersistInput";
+import { BeatLoader } from "react-spinners";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import { Auth, API } from "aws-amplify";
@@ -22,6 +23,7 @@ const LoginForm = () => {
   const [errorMessages, setErrorMessages] = useState({});
   const [email, resetEmail, emailAttribs] =  useInput('email', '')
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false)
   let from = location.state?.from?.pathname || null;
 
   // remove errors if user updates the email or password fields
@@ -49,12 +51,13 @@ const LoginForm = () => {
   const PostLogin = async (event) => {
     // prevent page reload  
     event.preventDefault();
+    setIsLoading(true)
 
       // console.log("in post login")
       try {
         // get authed user credentials
         const user = await Auth.signIn(email.toLowerCase().trim(), password)
-        // console.log("post login user", user)
+        console.log("post login user", user)
 
         // get identity data
         const identity = await Auth.currentUserCredentials()
@@ -87,9 +90,10 @@ const LoginForm = () => {
           // console.log("reassign from")
           from = `/${userAttributes?.username}/feed`
         }
+        setIsLoading(false)
         navigate(from, { replace: true})
       } catch (err) {
-        // console.log("error signing in user", err)
+        console.log("error signing in user", err)
         // keep sign in errors generic
         if (err.name === "NotAuthorizedException") {
           setErrorMessages({name: "NotAuthorizedException", message: errors.NotAuthorizedException})
@@ -135,7 +139,16 @@ const LoginForm = () => {
         </InputContainer>
         <NoAccount>Don't have an account? Sign up <Link to="/signup">here.</Link></NoAccount>
         <ButtonContainer>
-          <SubmitButton>Sign In</SubmitButton>
+          <SubmitButton>
+            { isLoading
+              ? <BeatLoader
+                  color="black"
+                  size={8}
+                  loading={isLoading}
+                />
+              : "Sign In"
+            }
+            </SubmitButton>
         </ButtonContainer>
       </form>
     </div>
