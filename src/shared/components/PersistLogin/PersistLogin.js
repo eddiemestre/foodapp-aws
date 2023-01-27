@@ -45,12 +45,12 @@ const PersistLogin = () => {
             catch (err) {
                 // if there is an error, logout and navigate
                 // to the login screen
-                console.error("an error occured", err);
-                await logout();
-                navigate(`/login`)
+                // console.error("an error occured", err);
+                // await logout();
+                // navigate(`/login`)
             }
             finally {
-                await delay(2000)
+                // await delay(2000)
                 setIsLoading(false);
             }
         }

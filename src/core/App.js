@@ -74,28 +74,32 @@ function App() {
             <Routes>
               <Route element={<PublicTemplate />}>
                 <Route path="/" element={<Home />} />
-                  <Route exact path="/signup" element={<SignUp />} />
-                  <Route exact path="/login" element={<Login />} />
-                </Route>
+                <Route exact path="/signup" element={<SignUp />} />
+                <Route exact path="/login" element={<Login />} />
+              </Route>
               <Route element={<PersistLogin />}>
-                <Route element={<RequireAuth />}>
                   <Route element={<InAppTemplate />}>
                       <>
                         <Route element={<CreateReviewLayout />}>
                           <Route path="/:username/feed" element={<Feed />} />
-                          <Route path="/:username/create-review" element={<CreateReview />}/>
+                          <Route element={<RequireAuth />}>
+                            <Route path="/:username/create-review" element={<CreateReview />}/>
+                          </Route>
                         </Route>
                         <Route element={<PersistReviewLayout />}>
                           <Route path="/:username/feed/:id" element={<SingleReview />} />
-                          <Route path="/:username/feed/:id/edit" element={<EditReview />} />
+                          <Route element={<RequireAuth />}>
+                            <Route path="/:username/feed/:id/edit" element={<EditReview />} />
+                          </Route>
                         </Route>
-                        <Route path="/:username/settings" element={<Settings />} />
-                        <Route path="/:username/update-password" element={<UpdatePassword />} />
-                        <Route path="/:username/update-email" element={<UpdateEmail />} />
+                        <Route element={<RequireAuth />}>
+                          <Route path="/:username/settings" element={<Settings />} />
+                          <Route path="/:username/update-password" element={<UpdatePassword />} />
+                          <Route path="/:username/update-email" element={<UpdateEmail />} />
+                        </Route>
                       </>
                   </Route>
                 </Route>
-              </Route>
             </Routes>
           </>
         : <LargeScreenView />}
